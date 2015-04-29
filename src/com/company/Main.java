@@ -9,6 +9,6 @@ public class Main {
 
     public static void a(){}
 
-    public static void b (){}
 
+    private int ad;
 }

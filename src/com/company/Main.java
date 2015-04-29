@@ -6,4 +6,8 @@ public class Main {
 	// write your code here
         System.out.println("HelloGitHub");
     }
+
+    public static void a(){}
+
+
 }

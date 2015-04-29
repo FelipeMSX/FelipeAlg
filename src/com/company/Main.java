@@ -12,4 +12,5 @@ public class Main {
 
     private int ad;
     private String as;
+    private long ssss;
 }

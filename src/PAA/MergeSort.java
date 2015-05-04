@@ -13,33 +13,38 @@ import java.io.IOException;
 
 public class MergeSort {
 
-
     static int i = 0;
     static int j = 0;
     static int k = 0;
-    static int coutVetor = 0;
-    static StringBuilder steps = new StringBuilder();
-    static FileData[] ConteinersOrdenar;
-    static FileData[] ConteinersSaida;
+    static int countReg = 0;// quantidade de registros que serão processados no merge.
+    static StringBuilder steps = new StringBuilder();// Armazena toda os passos que serão gravados no arquivo de saída.
+    static FileData[] ConteinersOrdenar; // Vetor que contém todos os registros a ordenar.
+    static FileData[] ConteinersSaida; // Vetor que armazena os registros armazenado.
     static final String CPNJ_TOKE = "<->";
-    static FileData dataM;
 
     public static void main(String[] args) throws IOException {
 
         if(args.length !=0){
             loadFileData(args[0]);
             mergesort(ConteinersOrdenar);
-			System.out.println("teste2");
-
-            for(int i =0 ; i < coutVetor-1; i++)
-            {
-              steps.append(ConteinersSaida[i].saidaImpressao);
-            }
-            steps.append(ConteinersSaida[coutVetor-1].saidaImpressao.replace("\n",""));
-			FileWriter fw = new FileWriter(args[1]);
-			fw.write(steps.toString());
-			fw.close();
+            prepareSteps();
+            writeSteps(args[1]);
         }
+    }
+
+    public static void prepareSteps()
+    {
+        for(int i =0 ; i < countReg -1; i++)
+        {
+            steps.append(ConteinersSaida[i].output);
+        }
+        steps.append(ConteinersSaida[countReg - 1].output.replace("\n", ""));
+    }
+    public static void writeSteps(String filePath) throws IOException
+    {
+        FileWriter fw = new FileWriter( filePath );
+        fw.write(steps.toString());
+        fw.close();
     }
 
     public static void loadFileData(String filePath) throws FileNotFoundException
@@ -58,7 +63,7 @@ public class MergeSort {
                 int count = 0;
                 while (br.ready() && count < fileSize)
                 {
-                    ConteinersCadastrados[count] = analiseLine(br.readLine());
+                    ConteinersCadastrados[count] = examineLine(br.readLine());
                     count++;
                 }
 
@@ -67,7 +72,7 @@ public class MergeSort {
                 ConteinersOrdenar = new FileData[fileSize2];
                 while (br.ready())
                 {
-                    FileData data = analiseLine(br.readLine());
+                    FileData data = examineLine(br.readLine());
 
                     FileData dataAchado = null;
                     for (int i = 0; i < fileSize; i++)
@@ -80,18 +85,18 @@ public class MergeSort {
                     }
                     if (!data.CNPJ.equals(dataAchado.CNPJ))
                     {
-                        data.mergePrioridade = 1000;
-                        data.saidaImpressao = criarPasso(data.ID, dataAchado.CNPJ, data.CNPJ);
-                        ConteinersOrdenar[coutVetor] = data;
-                        coutVetor++;
+                        data.mergePriority = 1000;
+                        data.output = createStep(data.ID, dataAchado.CNPJ, data.CNPJ);
+                        ConteinersOrdenar[countReg] = data;
+                        countReg++;
                     } else
                     {
-                        float pesoDiferancaPercentual = calcularDezPorcento(data.peso, dataAchado.peso);
-                        if (analisarDezPorcento(pesoDiferancaPercentual)) {
-                            data.mergePrioridade = (short)Math.round(pesoDiferancaPercentual*100) ;
-                            data.saidaImpressao = criarPasso(data.ID, dataAchado.peso, data.peso, pesoDiferancaPercentual);
-                            ConteinersOrdenar[coutVetor] = data;
-                            coutVetor++;
+                        float pesoDiferancaPercentual = calculateTenPercent(data.weight, dataAchado.weight);
+                        if (AnaliseTenPercent(pesoDiferancaPercentual)) {
+                            data.mergePriority = (short)Math.round(pesoDiferancaPercentual*100) ;
+                            data.output = createStep(data.ID, dataAchado.weight, data.weight, pesoDiferancaPercentual);
+                            ConteinersOrdenar[countReg] = data;
+                            countReg++;
                         }
                     }
                 }
@@ -103,12 +108,12 @@ public class MergeSort {
         }
     }
 
-    public static FileData analiseLine(String line){
+    public static FileData examineLine(String line){
         FileData data 		= new FileData();
         String[] analise 	= line.split(" ");
         data.ID 			= analise[0];
         data.CNPJ 			= analise[1];
-        data.peso 			= Integer.parseInt(analise[2]);
+        data.weight = Integer.parseInt(analise[2]);
 
         return data;
 
@@ -116,39 +121,39 @@ public class MergeSort {
 
     //Prepara a função antes de ser chamada
     public static void mergesort(FileData input[]){
-        ConteinersSaida = new FileData[coutVetor];
-        merge(input, 0, coutVetor-1);
+        ConteinersSaida = new FileData[countReg];
+        merge(input, 0, countReg -1);
     }
 
-    private static void merge(FileData input[], int ini, int fim) {
-        if(ini < fim) {
-            int meio = ini + (fim - ini) / 2;
+    private static void merge(FileData input[], int ini, int end) {
+        if(ini < end) {
+            int meio = ini + (end - ini) / 2;
             merge(input, ini, meio);
-            merge(input, meio + 1, fim);
-            intercalar(input, ini, meio, fim);
+            merge(input, meio + 1, end);
+            intercalate(input, ini, meio, end);
         }
     }
 
-    private static void intercalar(FileData input[], int ini,int meio, int fim) {
-        i = ini;
-        j = meio+1;
-        k = ini; // controlador do vetor output, a cada adição no vetor, é incrementado
+    private static void intercalate(FileData input[], int init, int middle, int end) {
+        i = init;
+        j = middle+1;
+        k = init; // controlador do vetor output, a cada adição no vetor, é incrementado
 
-        while (i <= meio || j <= fim ){
+        while (i <= middle || j <= end ){
 
             // Se já passou do fim, significa que não possui mais elementos do meio pro fim para inserir no vetor
-            if(j > fim)
+            if(j > end)
             {
                ConteinersSaida[k++] = input[i++];
             }
             else
                 // Se i > meio, significa que não existe mais elementos do inicio ao fim para comparar, agora é só adicioar do meio +1 ao fim.
-                if(i > meio)
+                if(i > middle)
                 {
                     ConteinersSaida[k++] = input[j++];
                 }
                 else
-                if(input[i].mergePrioridade > input[j].mergePrioridade)
+                if(input[i].mergePriority > input[j].mergePriority)
                 {
                     ConteinersSaida[k++] = input[i++];
                 }else
@@ -157,36 +162,31 @@ public class MergeSort {
 
                 }
         }
-        for(int w = ini ; w <= fim; w++){
+        for(int w = init ; w <= end; w++){
             input[w] = ConteinersSaida[w];
         }
 
     }
 
     // Responsável por criar cada passo da função.
-    public static String criarPasso(String ID,String CNPJCorreto, String CNPJErrado)
+    public static String createStep(String ID, String correctCNPJ, String wrongCNPJ)
     {
-        return (ID+": " + CNPJCorreto + CPNJ_TOKE + CNPJErrado+"\n");
+        return (ID+": " + correctCNPJ + CPNJ_TOKE + wrongCNPJ+"\n");
     }
 
     // Responsável por criar cada passo da função.
-    public static String criarPasso(String ID ,int pesoCorreto, int pesoErrado, float percentual)
+    public static String createStep(String ID, int correctWeight, int wrongWeight, float percentage)
     {
-        int diferenca = Math.abs(pesoCorreto - pesoErrado);
-        return (ID+": "+diferenca+"kg"+"("+ Math.round((percentual*100))+"%)"+"\n");
+        int difference = Math.abs(correctWeight - wrongWeight);
+        return (ID+": "+difference+"kg"+"("+ Math.round((percentage*100))+"%)"+"\n");
     }
 
-    public boolean CNPJDiferente(String cnpj1, String cpnj2)
-    {
-        return (cnpj1.equals(cpnj2));
+    public static float calculateTenPercent(int wrongWeight, int correctWeight)    {
+        int difference = Math.abs(wrongWeight - correctWeight);
+        return (difference/(float)correctWeight);
     }
 
-    public static float calcularDezPorcento(int pessoErrado, int pessoCorreto)    {
-        int diferenca = Math.abs(pessoErrado - pessoCorreto);
-        return (diferenca/(float)pessoCorreto);
-    }
-
-    public static boolean analisarDezPorcento(float num)
+    public static boolean AnaliseTenPercent(float num)
     {
         return (num > 0.1f) ;
     }
@@ -195,9 +195,9 @@ public class MergeSort {
     {
         private String ID;
         private String CNPJ;
-        private int peso;
-        private short mergePrioridade;
-        private String saidaImpressao;
+        private int weight;
+        private short mergePriority;
+        private String output; // armazena o conteúdo a ser gerado no arquivo de saída.
     }
 
 }

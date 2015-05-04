@@ -9,8 +9,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.DecimalFormat;
-import java.util.HashMap;
 
 
 public class MergeSort {
@@ -19,10 +17,10 @@ public class MergeSort {
     static int i = 0;
     static int j = 0;
     static int k = 0;
-    static HashMap<String, FileData> ConteinersCadastro;
-    static FileData[] ConteinersAnalisar;
-    static FileData[] ConteinersSaida;
+    static int coutVetor = 0;
     static StringBuilder steps = new StringBuilder();
+    static FileData[] ConteinersOrdenar;
+    static FileData[] ConteinersSaida;
     static final String CPNJ_TOKE = "<->";
     static FileData dataM;
 
@@ -30,13 +28,17 @@ public class MergeSort {
 
         if(args.length !=0){
             loadFileData(args[0]);
-            System.out.println();
+            mergesort(ConteinersOrdenar);
+			System.out.println("teste2");
 
-            //mergesort(ConteinersAnalisar);
-//			System.out.println(fileInfo[0].produtoCod);
-//			FileWriter fw = new FileWriter(args[1]);
-//			fw.write(steps.toString());
-//			fw.close();
+            for(int i =0 ; i < coutVetor-1; i++)
+            {
+              steps.append(ConteinersSaida[i].saidaImpressao);
+            }
+            steps.append(ConteinersSaida[coutVetor-1].saidaImpressao.replace("\n",""));
+			FileWriter fw = new FileWriter(args[1]);
+			fw.write(steps.toString());
+			fw.close();
         }
     }
 
@@ -45,30 +47,54 @@ public class MergeSort {
         // Contem o caminho do arquivo
         FileReader fr = new FileReader(filePath);
 
-        if (fr != null){
-            BufferedReader br = new BufferedReader( fr );
-            try {
+        if (fr != null)
+        {
+            BufferedReader br = new BufferedReader(fr);
+            try
+            {
                 //Lê os contêiners cadastrados
                 int fileSize = Integer.parseInt(br.readLine());
-                ConteinersCadastro = new HashMap<String,FileData>(fileSize);
+                FileData[] ConteinersCadastrados = new FileData[fileSize];
                 int count = 0;
-                while( br.ready() && count < fileSize){
-                    FileData data = analiseLine(br.readLine());
-                    ConteinersCadastro.put(data.ID, data);
-
+                while (br.ready() && count < fileSize)
+                {
+                    ConteinersCadastrados[count] = analiseLine(br.readLine());
                     count++;
                 }
 
                 //Lista de Contêiners com erros
-                fileSize = Integer.parseInt(br.readLine());
-                ConteinersAnalisar = new FileData[fileSize];
-                count = 0;
-                while( br.ready() && count < fileSize){
-                    ConteinersAnalisar[count] =  analiseLine(br.readLine());
+                int fileSize2 = Integer.parseInt(br.readLine());
+                ConteinersOrdenar = new FileData[fileSize2];
+                while (br.ready())
+                {
+                    FileData data = analiseLine(br.readLine());
 
-                    count++;
+                    FileData dataAchado = null;
+                    for (int i = 0; i < fileSize; i++)
+                    {
+                        if(data.ID.equals(ConteinersCadastrados[i].ID))
+                        {
+                            dataAchado = ConteinersCadastrados[i];
+                            break;
+                        }
+                    }
+                    if (!data.CNPJ.equals(dataAchado.CNPJ))
+                    {
+                        data.mergePrioridade = 1000;
+                        data.saidaImpressao = criarPasso(data.ID, dataAchado.CNPJ, data.CNPJ);
+                        ConteinersOrdenar[coutVetor] = data;
+                        coutVetor++;
+                    } else
+                    {
+                        float pesoDiferancaPercentual = calcularDezPorcento(data.peso, dataAchado.peso);
+                        if (analisarDezPorcento(pesoDiferancaPercentual)) {
+                            data.mergePrioridade = (short)Math.round(pesoDiferancaPercentual*100) ;
+                            data.saidaImpressao = criarPasso(data.ID, dataAchado.peso, data.peso, pesoDiferancaPercentual);
+                            ConteinersOrdenar[coutVetor] = data;
+                            coutVetor++;
+                        }
+                    }
                 }
-
                 br.close();
                 fr.close();
             } catch (IOException e) {
@@ -90,8 +116,8 @@ public class MergeSort {
 
     //Prepara a função antes de ser chamada
     public static void mergesort(FileData input[]){
-        ConteinersSaida = new FileData[input.length];
-        merge(input, 0, input.length-1);
+        ConteinersSaida = new FileData[coutVetor];
+        merge(input, 0, coutVetor-1);
     }
 
     private static void merge(FileData input[], int ini, int fim) {
@@ -109,11 +135,11 @@ public class MergeSort {
         k = ini; // controlador do vetor output, a cada adição no vetor, é incrementado
 
         while (i <= meio || j <= fim ){
-            dataM = ConteinersCadastro.get(input[i]);
+
             // Se já passou do fim, significa que não possui mais elementos do meio pro fim para inserir no vetor
             if(j > fim)
             {
-                ConteinersSaida[k++] = input[i++];
+               ConteinersSaida[k++] = input[i++];
             }
             else
                 // Se i > meio, significa que não existe mais elementos do inicio ao fim para comparar, agora é só adicioar do meio +1 ao fim.
@@ -122,13 +148,14 @@ public class MergeSort {
                     ConteinersSaida[k++] = input[j++];
                 }
                 else
-                if(!input[i].CNPJ.equals(dataM.CNPJ))
+                if(input[i].mergePrioridade > input[j].mergePrioridade)
                 {
-                    criarPasso(input[i].ID, dataM.CNPJ, input[i].CNPJ);
+                    ConteinersSaida[k++] = input[i++];
+                }else
+                {
+                    ConteinersSaida[k++] = input[j++];
+
                 }
-            // Quando os proprietários tiverem COD iguais, é necessário decidir pela prioridade
-
-
         }
         for(int w = ini ; w <= fim; w++){
             input[w] = ConteinersSaida[w];
@@ -137,16 +164,16 @@ public class MergeSort {
     }
 
     // Responsável por criar cada passo da função.
-    public static void criarPasso(String ID,String CNPJCorreto, String CNPJErrado)
+    public static String criarPasso(String ID,String CNPJCorreto, String CNPJErrado)
     {
-        steps.append(ID+": " + CNPJCorreto + CPNJ_TOKE + CNPJErrado+"\n");
+        return (ID+": " + CNPJCorreto + CPNJ_TOKE + CNPJErrado+"\n");
     }
 
     // Responsável por criar cada passo da função.
-    public static void criarPasso(String ID ,int pesoCorreto, int pesoErrado, float percentual)
+    public static String criarPasso(String ID ,int pesoCorreto, int pesoErrado, float percentual)
     {
-        int diferenca = Math.abs(pesoCorreto - pesoCorreto);
-        steps.append(ID+": "+diferenca+"kg"+"("+(int)(percentual*100)+"%)"+"\n");
+        int diferenca = Math.abs(pesoCorreto - pesoErrado);
+        return (ID+": "+diferenca+"kg"+"("+ Math.round((percentual*100))+"%)"+"\n");
     }
 
     public boolean CNPJDiferente(String cnpj1, String cpnj2)
@@ -154,15 +181,14 @@ public class MergeSort {
         return (cnpj1.equals(cpnj2));
     }
 
-    public static float calcularDezPorcento(int numerador, int denomidador)
-    {
-        int diferenca = Math.abs(numerador - denomidador);
-        return (diferenca/(float)numerador);
+    public static float calcularDezPorcento(int pessoErrado, int pessoCorreto)    {
+        int diferenca = Math.abs(pessoErrado - pessoCorreto);
+        return (diferenca/(float)pessoCorreto);
     }
 
     public static boolean analisarDezPorcento(float num)
     {
-        return (num > 0.1) ? true : false;
+        return (num > 0.1f) ;
     }
 
     public static class FileData
@@ -170,6 +196,8 @@ public class MergeSort {
         private String ID;
         private String CNPJ;
         private int peso;
+        private short mergePrioridade;
+        private String saidaImpressao;
     }
 
 }

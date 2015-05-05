@@ -81,6 +81,42 @@ public class QuickSort {
 
     }
 
+    //PP : particionar padrão
+    public static void particionarPadrao()
+    {
+
+    }
+
+    //PM particionar por mediana de 3
+    public static void particionarMediana()
+    {
+
+    }
+
+    //PA particionar por pivô aleatório
+    public static void particionarPivoAleatorio()
+    {
+
+    }
+
+    //HP hoare padrão
+    public static void particionarHoarePadrao()
+    {
+
+    }
+
+    //HM hoare por mediana de 3
+    public static void particionarHoareMediana()
+    {
+
+    }
+
+    //HA e hoare por pivô aleatório
+    public static void particionarHoarePivoAleatorio()
+    {
+
+    }
+
     public static class FileData
     {
         private String ID;

@@ -122,7 +122,6 @@ public class QuickSort {
         quicksortPadrao(input, 0, n);
         input = tempCopia.clone();
 
-
         stepsMediana = 0;
         quicksortMediana(input,0,n);
         input = tempCopia.clone();
@@ -134,7 +133,6 @@ public class QuickSort {
         stepsHoarePadrao = 0;
         quicksortHoare(input, 0, n);
         input = tempCopia.clone();
-
 
         stepsHoareMediana = 0;
         quicksortHoareMediana(input,0,n);
@@ -207,7 +205,11 @@ public class QuickSort {
     //PM particionar por mediana de 3
     public static int particionarMediana(int input[], int init, int end)
     {
-        int pivo = calcPivoMediana(input,init,end) ;
+        int pivoPosition =  calcPivoMedianaPosition(input, init, end) ;
+        int pivo = input[pivoPosition];
+        stepsMediana++;
+        swapItem(input,pivoPosition,end);
+
         int i = init - 1, j;
         for(j = init; j < end; j++) {
             if(input[j] <= pivo) {
@@ -233,7 +235,10 @@ public class QuickSort {
     //PA particionar por pivï¿½ aleatï¿½rio
     public static int particionarPivoAleatorio(int input[], int init, int end)
     {
-        int pivo = calcPivoAleatorio(input,init,end) ;
+        int pivoPosition = calcPivoAleatorioPossition(input,init,end);
+        int pivo = input[pivoPosition];
+        stepsAleatorio++;
+        swapItem(input,pivoPosition,end);
         int i = init - 1, j;
         for(j = init; j < end; j++) {
             if(input[j] <= pivo) {
@@ -289,7 +294,11 @@ public class QuickSort {
     //HM hoare por mediana de 3
     public static int particionarHoareMediana(int input[], int inicio, int fim)
     {
-        int pivo = calcPivoMediana(input,inicio,fim);
+        int pivoPosition = calcPivoMedianaPosition(input, inicio, fim) ;
+        int pivo = input[pivoPosition];
+        stepsHoareMediana++;
+        swapItem(input,pivoPosition,inicio);
+
         int i = inicio;
         int j = fim;
         while(i < j) {
@@ -306,7 +315,7 @@ public class QuickSort {
     }
 
     private static void quicksortHoareAleatorio(int input[], int inicio, int fim) {
-        stepsHoareAleatorio++;// Nï¿½mero de chamadas
+        stepsHoareAleatorio++;// Número de chamadas
         if(inicio < fim) {
             int pivo = particionarHoarePivoAleatorio(input, inicio, fim);
             quicksortHoareAleatorio(input, inicio, pivo);
@@ -314,10 +323,14 @@ public class QuickSort {
 
         }
     }
-    //HA e hoare por pivï¿½ aleatï¿½rio
+    //HA e hoare por pivô aleatório
     public static int particionarHoarePivoAleatorio(int input[], int inicio, int fim)
     {
-        int pivo = calcPivoAleatorio(input,inicio,fim);
+        int pivoPosition = calcPivoAleatorioPossition(input,inicio,fim);
+        int pivo = input[pivoPosition];
+        stepsHoareAleatorio++;
+        swapItem(input,pivoPosition,inicio);
+
         int i = inicio;
         int j = fim;
         while(i < j) {
@@ -333,21 +346,31 @@ public class QuickSort {
         return j;
     }
 
-    public static int calcPivoMediana(int vector[], int init, int end)
+    public static int calcPivoMedianaPosition(int vector[], int init, int end)
     {
         int n = end - init +1;
         int v1 = vector[n/4];
         int v2 = vector[n/2];
         int v3 = vector[3*n/4];
         int[] x = {v1,v2,v3};
-        quicksortPadrao(x,0,2);
 
-        return ( x[1]);
+        short temp = stepsPadrao;
+        quicksortPadrao(x,0,2);
+        stepsPadrao = temp;
+
+        if(vector[n/4] == x[1])
+            return n/4;
+        else
+        if(vector[n/2] == x[1])
+            return n/2;
+        else
+            return 3*n/4;
+
     }
 
-    public static int calcPivoAleatorio(int vector[], int init, int end)
+    public static int calcPivoAleatorioPossition(int vector[], int init, int end)
     {
-        int n = end - init +1;
-        return vector[init + (Math.abs(vector[init]) % n) ];
+        int n = end - init+1;
+        return init + Math.abs(vector[init])%n;
     }
 }

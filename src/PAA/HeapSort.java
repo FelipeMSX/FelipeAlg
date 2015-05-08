@@ -13,11 +13,9 @@ import java.io.IOException;
 
 public class HeapSort {
 
-    static int i = 0;
-    static int j = 0;
-    static int k = 0;
+    static short qtdPackages;
+    static short interval;
     static StringBuilder steps = new StringBuilder();// Armazena toda os passos que serão gravados no arquivo de saída.
-
 
     public static void main(String[] args) throws IOException {
 
@@ -45,14 +43,11 @@ public class HeapSort {
         // Contem o caminho do arquivo
         FileReader fr = new FileReader(filePath);
 
-        if (fr != null)
-        {
             BufferedReader br = new BufferedReader(fr);
             try
             {
                 //Lê os contêiners cadastrados
                 int fileSize = Integer.parseInt(br.readLine());
-              //  FileData[] ConteinersCadastrados = new FileData[fileSize];
                 int count = 0;
                 while (br.ready() && count < fileSize)
                 {
@@ -65,13 +60,16 @@ public class HeapSort {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
+
     }
 
+    public static void examineFirstLine(String line)
+    {
+
+    }
     public static void examineLine(String line){
 
     }
-
 
     // Responsável por criar cada passo da função.
     public static String createStep(String ID, String correctCNPJ, String wrongCNPJ)
@@ -79,5 +77,18 @@ public class HeapSort {
         return null;
     }
 
+    public int getFather(int i)
+    {
+        return (i-1)/2;
+    }
 
+    public int getLeft(int i)
+    {
+        return 2*i+1;
+    }
+
+    public int getRight(int i)
+    {
+        return 2*i+2;
+    }
 }

@@ -15,6 +15,7 @@ public class HeapSort {
 
     static short qtdPackages;
     static short interval;
+    static String packages;
     static StringBuilder steps = new StringBuilder();// Armazena toda os passos que serão gravados no arquivo de saída.
 
     public static void main(String[] args) throws IOException {

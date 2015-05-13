@@ -1,7 +1,7 @@
 package PAA;
 
 /**
- * Created by Felipe on 29/04/2015.
+ * Created by Felipe on 12/05/2015.
  */
 
 import java.io.BufferedReader;
@@ -15,23 +15,56 @@ public class HeapSort {
 
     static short qtdPackages;
     static short interval;
-    static String packages;
+    static short packageSearch;// ponteiro para a posição do vetor,
+    static short packagePonteiro;//Indica até onde ja foram processados os pacotes
+    static FileData[] packages;
+
     static StringBuilder steps = new StringBuilder();// Armazena toda os passos que serão gravados no arquivo de saída.
 
-    public static void main(String[] args) throws IOException {
+    static String[] bufferOrdenar; // Armazena os dados do pacotes para mandar ordenar posteriomente.
+    static short contadorDeDadosNoPacoteOrdenado;
 
-        if(args.length !=0){
+
+    public static void main(String[] args) throws IOException
+    {
+        if(args.length !=0)
+        {
             loadFileData(args[0]);
 
-            prepareSteps();
-            writeSteps(args[1]);
+             bufferOrdenar = new String[5000];
+              prepareSteps();
+//            writeSteps(args[1]);
+            System.out.println();
         }
     }
 
     public static void prepareSteps()
     {
+        while(packagePonteiro < qtdPackages)// enquanto todos pacotes não forem processados faça.
+        {
+
+        }
+    }
+
+    public static void AnalisarPacotes()
+    {
 
     }
+
+    public static void adicionarAoBufferDePacotesOrdenados(FileData f)
+    {
+
+    }
+
+    public static void dobrarCapacidade()
+    {
+        String[] temp = new String[bufferOrdenar.length*2];
+        for(int i= 0; i < 0; i++)
+            temp[i] = bufferOrdenar[i];
+
+        bufferOrdenar = temp;
+    }
+
     public static void writeSteps(String filePath) throws IOException
     {
         FileWriter fw = new FileWriter( filePath );
@@ -48,11 +81,12 @@ public class HeapSort {
             try
             {
                 //Lê os contêiners cadastrados
-                int fileSize = Integer.parseInt(br.readLine());
+                examineFirstLine(br.readLine());
+                packages = new FileData[qtdPackages];
                 int count = 0;
-                while (br.ready() && count < fileSize)
+                while (br.ready())
                 {
-
+                    packages[count] = examineLine(br.readLine());
                     count++;
                 }
 
@@ -66,10 +100,18 @@ public class HeapSort {
 
     public static void examineFirstLine(String line)
     {
-
+        String[] s = line.split(" ");
+        qtdPackages =  Short.parseShort(s[0]);
+        interval    = Short.parseShort(s[1]);
     }
-    public static void examineLine(String line){
+    public static FileData examineLine(String line)
+    {
+        FileData f = new FileData();
+        f.ordemPackage = Short.parseShort(line.substring(0, 1));
+        String l = line.substring(4,line.length());
+        f.dados  = l.split(" ");
 
+        return f;
     }
 
     // Responsável por criar cada passo da função.
@@ -91,5 +133,12 @@ public class HeapSort {
     public int getRight(int i)
     {
         return 2*i+2;
+    }
+
+    public static class FileData
+    {
+        public short ordemPackage;
+        public String[] dados;
+
     }
 }

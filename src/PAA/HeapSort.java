@@ -13,17 +13,15 @@ import java.io.IOException;
 
 public class HeapSort {
 
-    static short qtdPackages;
-    static short interval;
-    static short packageSearch;// ponteiro para a posição do vetor,
-    static short packagePonteiro;//Indica até onde ja foram processados os pacotes
-    static FileData[] packages;
-
+    static short qtdPacotes;
+    static short intervalo;
+    static FileData[] pacotesForaDeOrdem;
+    static FileData[] pacotesEntrada;
+    static short ordemEsperada; // indica qual o número pacote é esperado;
+    static String[] bufferOrdenar; // Armazena os dados do pacotesEntrada para mandar ordenar assim que o limite de pacotesEntrada for atingindo.
+    static int qtdBufferItens = 0;
     static StringBuilder steps = new StringBuilder();// Armazena toda os passos que serão gravados no arquivo de saída.
-
-    static String[] bufferOrdenar; // Armazena os dados do pacotes para mandar ordenar posteriomente.
-    static short contadorDeDadosNoPacoteOrdenado;
-
+    static String sortedDatas;
 
     public static void main(String[] args) throws IOException
     {
@@ -40,20 +38,85 @@ public class HeapSort {
 
     public static void prepareSteps()
     {
-        while(packagePonteiro < qtdPackages)// enquanto todos pacotes não forem processados faça.
+        int count = 0;
+        int intercaloCount = 0;
+        while(count != qtdPacotes)// enquanto todos pacotesEntrada não forem processados faça.
         {
-
+            intercaloCount++;
+            count++;
+            if(intercaloCount == intervalo)
+            {
+                AnalisarPacotes(count);
+                intercaloCount = 0;
+            }
+            else//Se a mandar analisar mas não atingir o limite é para executar;
+            if( count == qtdPacotes && intercaloCount > 0)
+            {
+                AnalisarPacotes(count);
+            }
         }
     }
 
-    public static void AnalisarPacotes()
+    public static void AnalisarPacotes(int inicio)
     {
+        for(int i = inicio - intervalo; i < inicio; i++  )//Ao final do for irei ter os dados no bufferOrdenar para ir pro heap.
+        {
+            FileData f = pacotesEntrada[i];
+            TransferirPacotesbufferForadeOrdemToBufferHeap(); // evita que pacotes sejam colocados do bufferForadeOrdem sem necessidade;
+            if (f.ordemPackage == ordemEsperada)// Se pacote for o esperado colocar no buffer;
+            {
+                    colocarPacoteNoBufferParaOHeap(f);
+                    ordemEsperada++;
+            }else
+            {
+                colocarPacoteNoBufferForaDeOrdem(f);
+            }
+        }
+        //Mandar Ordenar no Heap;
 
     }
 
-    public static void adicionarAoBufferDePacotesOrdenados(FileData f)
+    public static void TransferirPacotesbufferForadeOrdemToBufferHeap()
     {
+        //Se Ao adocionar os pacotes e existir pacotes de ordem
+        FileData f = buscarPacoteNobufferForaDeOrdem();
+        while(f!= null)
+        {
+            colocarPacoteNoBufferParaOHeap(f);
+            ordemEsperada++;
+            f = buscarPacoteNobufferForaDeOrdem();
+        }
+    }
 
+    public static FileData buscarPacoteNobufferForaDeOrdem()
+    {
+        if(pacotesForaDeOrdem[ordemEsperada] != null && pacotesForaDeOrdem[ordemEsperada].ordemPackage == ordemEsperada)
+        {
+            FileData f = pacotesForaDeOrdem[ordemEsperada];
+            pacotesForaDeOrdem[ordemEsperada] = null;
+            return f;
+        }else
+            return null;
+    }
+
+    public static void colocarPacoteNoBufferForaDeOrdem(FileData f)
+    {
+        pacotesForaDeOrdem[f.ordemPackage] = f;
+    }
+
+    public static void colocarPacoteNoBufferParaOHeap(FileData f)
+    {
+        if(qtdBufferItens+f.dados.length > bufferOrdenar.length)
+        {
+            dobrarCapacidade();
+            colocarPacoteNoBufferParaOHeap(f);
+        }else
+        {
+            int tamanho = f.dados.length;
+            for (int i = 0; i < tamanho; i++) {
+                bufferOrdenar[qtdBufferItens++] = f.dados[i];
+            }
+        }
     }
 
     public static void dobrarCapacidade()
@@ -82,11 +145,12 @@ public class HeapSort {
             {
                 //Lê os contêiners cadastrados
                 examineFirstLine(br.readLine());
-                packages = new FileData[qtdPackages];
+                pacotesEntrada = new FileData[qtdPacotes];
+                pacotesForaDeOrdem = new FileData[qtdPacotes];
                 int count = 0;
                 while (br.ready())
                 {
-                    packages[count] = examineLine(br.readLine());
+                    pacotesEntrada[count] = examineLine(br.readLine());
                     count++;
                 }
 
@@ -101,8 +165,8 @@ public class HeapSort {
     public static void examineFirstLine(String line)
     {
         String[] s = line.split(" ");
-        qtdPackages =  Short.parseShort(s[0]);
-        interval    = Short.parseShort(s[1]);
+        qtdPacotes =  Short.parseShort(s[0]);
+        intervalo = Short.parseShort(s[1]);
     }
     public static FileData examineLine(String line)
     {

@@ -157,12 +157,6 @@ public class HeapSort {
         return f;
     }
 
-    // Responsável por criar cada passo da função.
-    public static String createStep(String ID, String correctCNPJ, String wrongCNPJ)
-    {
-        return null;
-    }
-
     public static int getFather(int i)
     {
         return (i-1)/2;

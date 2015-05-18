@@ -13,15 +13,14 @@ import java.io.IOException;
 
 public class HeapSort {
 
-    static short qtdPacotes;
+    static int qtdPacotesTotal;
     static short intervalo;
-    static FileData[] pacotesForaDeOrdem;
     static FileData[] pacotesEntrada;
-    static short ordemEsperada; // indica qual o número pacote é esperado;
-    static String[] bufferOrdenar; // Armazena os dados do pacotesEntrada para mandar ordenar assim que o limite de pacotesEntrada for atingindo.
-    static int qtdBufferItens = 0;
+    static int sqPacoteEsperado = 0;
+    static int stepsCount;
+
     static StringBuilder steps = new StringBuilder();// Armazena toda os passos que serão gravados no arquivo de saída.
-    static String sortedDatas;
+    static StringBuilder PreSteps = new StringBuilder();
 
     public static void main(String[] args) throws IOException
     {
@@ -29,103 +28,10 @@ public class HeapSort {
         {
             loadFileData(args[0]);
 
-             bufferOrdenar = new String[5000];
-              prepareSteps();
-//            writeSteps(args[1]);
+
+            writeSteps(args[1]);
             System.out.println();
         }
-    }
-
-    public static void prepareSteps()
-    {
-        int count = 0;
-        int intercaloCount = 0;
-        while(count != qtdPacotes)// enquanto todos pacotesEntrada não forem processados faça.
-        {
-            intercaloCount++;
-            count++;
-            if(intercaloCount == intervalo)
-            {
-                AnalisarPacotes(count);
-                intercaloCount = 0;
-            }
-            else//Se a mandar analisar mas não atingir o limite é para executar;
-            if( count == qtdPacotes && intercaloCount > 0)
-            {
-                AnalisarPacotes(count);
-            }
-        }
-    }
-
-    public static void AnalisarPacotes(int inicio)
-    {
-        for(int i = inicio - intervalo; i < inicio; i++  )//Ao final do for irei ter os dados no bufferOrdenar para ir pro heap.
-        {
-            FileData f = pacotesEntrada[i];
-            TransferirPacotesbufferForadeOrdemToBufferHeap(); // evita que pacotes sejam colocados do bufferForadeOrdem sem necessidade;
-            if (f.ordemPackage == ordemEsperada)// Se pacote for o esperado colocar no buffer;
-            {
-                    colocarPacoteNoBufferParaOHeap(f);
-                    ordemEsperada++;
-            }else
-            {
-                colocarPacoteNoBufferForaDeOrdem(f);
-            }
-        }
-        //Mandar Ordenar no Heap;
-
-    }
-
-    public static void TransferirPacotesbufferForadeOrdemToBufferHeap()
-    {
-        //Se Ao adocionar os pacotes e existir pacotes de ordem
-        FileData f = buscarPacoteNobufferForaDeOrdem();
-        while(f!= null)
-        {
-            colocarPacoteNoBufferParaOHeap(f);
-            ordemEsperada++;
-            f = buscarPacoteNobufferForaDeOrdem();
-        }
-    }
-
-    public static FileData buscarPacoteNobufferForaDeOrdem()
-    {
-        if(pacotesForaDeOrdem[ordemEsperada] != null && pacotesForaDeOrdem[ordemEsperada].ordemPackage == ordemEsperada)
-        {
-            FileData f = pacotesForaDeOrdem[ordemEsperada];
-            pacotesForaDeOrdem[ordemEsperada] = null;
-            return f;
-        }else
-            return null;
-    }
-
-    public static void colocarPacoteNoBufferForaDeOrdem(FileData f)
-    {
-        pacotesForaDeOrdem[f.ordemPackage] = f;
-    }
-
-    public static void colocarPacoteNoBufferParaOHeap(FileData f)
-    {
-        if(qtdBufferItens+f.dados.length > bufferOrdenar.length)
-        {
-            dobrarCapacidade();
-            colocarPacoteNoBufferParaOHeap(f);
-        }else
-        {
-            int tamanho = f.dados.length;
-            for (int i = 0; i < tamanho; i++) {
-                bufferOrdenar[qtdBufferItens++] = f.dados[i];
-            }
-        }
-    }
-
-    public static void dobrarCapacidade()
-    {
-        String[] temp = new String[bufferOrdenar.length*2];
-        for(int i= 0; i < 0; i++)
-            temp[i] = bufferOrdenar[i];
-
-        bufferOrdenar = temp;
     }
 
     public static void writeSteps(String filePath) throws IOException
@@ -145,13 +51,28 @@ public class HeapSort {
             {
                 //Lê os contêiners cadastrados
                 examineFirstLine(br.readLine());
-                pacotesEntrada = new FileData[qtdPacotes];
-                pacotesForaDeOrdem = new FileData[qtdPacotes];
-                int count = 0;
+                pacotesEntrada = new FileData[qtdPacotesTotal];
+                int qtdPacotesAnalisados = 0;
+                int countIntervalo = 0;
                 while (br.ready())
                 {
-                    pacotesEntrada[count] = examineLine(br.readLine());
-                    count++;
+                    pacotesEntrada[qtdPacotesAnalisados] = examineLine(br.readLine());
+                    qtdPacotesAnalisados++;
+                    countIntervalo++;
+                    if(countIntervalo == intervalo)// quando atingir o limite é preciso analisar
+                    {
+                        heapsort(pacotesEntrada,qtdPacotesAnalisados);
+                        createPreStep(pacotesEntrada);
+                        createIntervalStep(PreSteps);
+                        countIntervalo = 0;
+                    }
+                }
+
+                if(countIntervalo > 0)
+                {
+                    heapsort(pacotesEntrada, qtdPacotesAnalisados);
+                    createPreStep(pacotesEntrada);
+                    createIntervalStep(PreSteps);
                 }
 
                 br.close();
@@ -162,10 +83,68 @@ public class HeapSort {
 
     }
 
+    public static void createPreStep(FileData input[])
+    {
+        if(pacotesEntrada[sqPacoteEsperado] != null && pacotesEntrada[sqPacoteEsperado].ordemPackage == sqPacoteEsperado)
+        {
+            FileData f = pacotesEntrada[sqPacoteEsperado++];
+            int temp = f.dados.length ;
+            for(int i = 0; i < temp; i++ )
+            {
+                PreSteps.append(" "+f.dados[i]);
+        }
+            if(sqPacoteEsperado != qtdPacotesTotal)
+            createPreStep(pacotesEntrada);
+        }
+    }
+
+    public static void createIntervalStep(StringBuilder PreSteps)
+    {
+        steps.append(stepsCount +":" + PreSteps.toString()+"\n");
+        stepsCount++;
+    }
+
+    public static void maxHeapify(FileData input[], int i, int n) {
+        int P = i;
+        int E = getLeft(i);
+        int D = getRight(i);
+        if (E < n && input[E].ordemPackage > input[P].ordemPackage) P = E;
+        if (D < n && input[D].ordemPackage > input[P].ordemPackage) P = D;
+        if (P != i)
+        {
+            swapItem(input, i, P);
+            maxHeapify(input, P, n);
+        }
+    }
+
+    public static void heapsort(FileData input[], int n)// heapmax
+    {
+        buildMaxHeap(input,n);
+        int i;
+        for(i = n - 1; i > 0; i--)
+        {
+            swapItem(input,0,i);
+            maxHeapify(input, 0, i);
+        }
+    }
+    private static void buildMaxHeap(FileData[] input, int n)
+    {
+        for (int i = n/2 - 1; i >= 0; i--)
+            maxHeapify(input, i , n);
+    }
+
+    public static void swapItem(FileData[] input, int positionX, int positionY)
+    {
+        FileData temp = input[positionX];
+        input[positionX] = input[positionY];
+        input[positionY] = temp;
+    }
+
+
     public static void examineFirstLine(String line)
     {
         String[] s = line.split(" ");
-        qtdPacotes =  Short.parseShort(s[0]);
+        qtdPacotesTotal =  Short.parseShort(s[0]);
         intervalo = Short.parseShort(s[1]);
     }
     public static FileData examineLine(String line)
@@ -184,17 +163,17 @@ public class HeapSort {
         return null;
     }
 
-    public int getFather(int i)
+    public static int getFather(int i)
     {
         return (i-1)/2;
     }
 
-    public int getLeft(int i)
+    public static int getLeft(int i)
     {
         return 2*i+1;
     }
 
-    public int getRight(int i)
+    public static int getRight(int i)
     {
         return 2*i+2;
     }

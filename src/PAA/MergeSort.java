@@ -69,20 +69,25 @@ public class MergeSort {
 
                 //Lista de Contêiners com erros
                 int fileSize2 = Integer.parseInt(br.readLine());
+                int controladorF = fileSize-1;
                 ConteinersOrdenar = new FileData[fileSize2];
                 while (br.ready())
                 {
                     FileData data = examineLine(br.readLine());
 
                     FileData dataAchado = null;
-                    for (int i = 0; i < fileSize; i++)
+                    for (int i = 0; i < controladorF; i++)
                     {
                         if(data.ID.equals(ConteinersCadastrados[i].ID))
                         {
                             dataAchado = ConteinersCadastrados[i];
-                            break;
+                            ConteinersCadastrados[i] = ConteinersCadastrados[controladorF];
+                            controladorF--;
+                            i = controladorF;
+
                         }
                     }
+
                     if (!data.CNPJ.equals(dataAchado.CNPJ))
                     {
                         data.mergePriority = 1000;
@@ -100,6 +105,7 @@ public class MergeSort {
                         }
                     }
                 }
+                System.out.println("Fim");
                 br.close();
                 fr.close();
             } catch (IOException e) {

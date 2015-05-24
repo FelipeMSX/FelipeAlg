@@ -29,6 +29,7 @@ public class MergeSort {
             mergesort(ConteinersOrdenar);
             prepareSteps();
             writeSteps(args[1]);
+           // System.out.println(calculateTenPercent(100,225));
         }
     }
 
@@ -95,8 +96,11 @@ public class MergeSort {
                         countReg++;
                     } else
                     {
+
                         float pesoDiferancaPercentual = calculateTenPercent(data.weight, dataAchado.weight);
-                        if (AnaliseTenPercent(pesoDiferancaPercentual)) {
+
+                        if (pesoDiferancaPercentual > 0.1050f) {
+
                             data.mergePriority = (short)Math.round(pesoDiferancaPercentual*100) ;
                             data.output = createStep(data.ID, dataAchado.weight, data.weight, pesoDiferancaPercentual);
                             ConteinersOrdenar[countReg] = data;
@@ -187,12 +191,13 @@ public class MergeSort {
 
     public static float calculateTenPercent(int wrongWeight, int correctWeight)    {
         int difference = Math.abs(wrongWeight - correctWeight);
-        return (difference/(float)correctWeight);
+        return ((float)difference/(float)correctWeight);
     }
 
     public static boolean AnaliseTenPercent(float num)
     {
-        return (num > 0.1f) ;
+
+        return (num >= 0.11f) ;
     }
 
     public static class FileData

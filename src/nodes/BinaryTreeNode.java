@@ -1,4 +1,4 @@
-package nodes;
+package  nodes;
 
 public class BinaryTreeNode<E> extends Node<E> {
 	
@@ -42,5 +42,18 @@ public class BinaryTreeNode<E> extends Node<E> {
 		this.right = right;
 	}
 
-	
+	public boolean hasLeftNode()
+	{
+		return (left != null);
+	}
+
+	public boolean hasRightNode()
+	{
+		return (right != null);
+	}
+
+	public boolean hasFatherNode()
+	{
+		return (father != null);
+	}
 }

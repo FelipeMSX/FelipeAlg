@@ -1,5 +1,7 @@
 package structs;
 
+import exception.ElementNotFoundException;
+import exception.EmptyListException;
 import exception.EqualsElementException;
 import interfaces.Common;
 import nodes.BinaryTreeNode;
@@ -55,16 +57,34 @@ public class BinaryTree<E extends Comparable<E>> implements Common<E> {
                     }
                 }else // ==0 não permite itens iguais
                 {
-                    throw new EqualsElementException("Not allowed equals elements");
+                    throw new EqualsElementException("Not allowed equals elements.");
                 }
             }
         }
-        return false;
+        return true;
     }
 
     @Override
     public boolean remove(E object) {
-        return (size == 0);
+        if(isEmpty())
+        {
+            throw new EmptyListException("The list no contain element to remove it.");
+        }else
+        {
+            BinaryTreeNode<E> search =  getNode(object);
+
+            if(search == null)
+            {
+                throw new ElementNotFoundException("The element not exists in the list.");
+            }else
+            {
+                
+            }
+
+
+            size--;
+        }
+        return false;
     }
 
     @Override
@@ -73,8 +93,42 @@ public class BinaryTree<E extends Comparable<E>> implements Common<E> {
     }
 
     @Override
-    public E getItem(E object) {
-        return null;
+    public E getItem(E object)
+    {
+        BinaryTreeNode<E> node = getNode(object);
+        return (node !=null) ? node.getObject() : null;
+    }
+
+    private BinaryTreeNode<E> getNode(E object)
+    {
+        if(isEmpty())
+        {
+            throw new EmptyListException("The list no contain element to remove it.");
+        }
+        else
+        {
+            BinaryTreeNode<E> search = root.getFather();
+
+            //Encontrar o nó a ser removido
+            while(search != null)
+            {
+                //Avançara para direita
+                if( search.getObject().compareTo(object) <= -1 )
+                {
+                    search = search.getRight();
+                }
+                //Avançara para esquerda
+                else if (search.getObject().compareTo(object) >= 1)
+                {
+                    search = search.getLeft();
+                }
+                else
+                {
+                    break;
+                }
+         }
+            return (search != null) ? search : null;
+        }
     }
 
     @Override

@@ -46,6 +46,17 @@ public class AlgolTest {
         tree.insert(o8);
         tree.insert(o9);
 
+       // tree.printList();
+
+        tree.remove(o1);
+        tree.remove(o9);
+
+        tree.remove(o2);
+        tree.remove(o5);
+        tree.remove(o3);
+        tree.remove(o7);
+        tree.remove(o6);
+        tree.remove(o4);
         tree.printList();
     }
 }

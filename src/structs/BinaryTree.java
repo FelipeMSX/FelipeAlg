@@ -17,6 +17,7 @@ public class BinaryTree<E extends Comparable<E>> implements Common<E> {
     public BinaryTree(){
         root = new BinaryTreeNode<E>();
         size = 0;
+
     }
 
     @Override
@@ -26,6 +27,7 @@ public class BinaryTree<E extends Comparable<E>> implements Common<E> {
         if(isEmpty())
         {
             root.setFather(node);
+            node.setFather(root);
             size++;
         }else
         {
@@ -61,14 +63,15 @@ public class BinaryTree<E extends Comparable<E>> implements Common<E> {
                 }
             }
         }
+        size++;
         return true;
     }
 
     @Override
-    public boolean remove(E object) {
+    public E remove(E object) {
         if(isEmpty())
         {
-            throw new EmptyListException("The list no contain element to remove it.");
+            throw new EmptyListException("The list no contain element this element.");
         }else
         {
             BinaryTreeNode<E> search =  getNode(object);
@@ -78,13 +81,95 @@ public class BinaryTree<E extends Comparable<E>> implements Common<E> {
                 throw new ElementNotFoundException("The element not exists in the list.");
             }else
             {
-                
+                //Remoção do nó sem filhos.
+                if(!search.hasLeftNode() && !search.hasRightNode())
+                {
+                    //Remoção do nó raiz
+                    if(size == 1)
+                    {
+                        root.setFather(null);
+                    }
+                    //Remoção de qualquer outro nó
+                    else
+                    {
+                        BinaryTreeNode<E> father = search.getFather();
+                        if(father.hasLeftNode() && father.getLeft().equals(search))
+                            father.setLeft(null);
+                        else
+                            father.setRight(null);
+                    }
+                }
+                //Remoção com só um filho na esquerda.
+                else if(search.hasLeftNode() && !search.hasRightNode())
+                {
+                    BinaryTreeNode<E> father = search.getFather();
+                    search.getLeft().setFather(father);
+                    if(search.equals(root.getFather()))
+                    {
+                        root.setFather(search.getLeft());
+                    }
+                    else
+                    {
+                        father.setLeft(search.getLeft());
+                    }
+                }
+                //Remoção com só um filho na direita.
+                else if(!search.hasLeftNode() && search.hasRightNode())
+                {
+                    BinaryTreeNode<E> father = search.getFather();
+                    search.getRight().setFather(father);
+
+                    search.getRight().setFather(father);
+                    if(search.equals(root.getFather()))
+                    {
+                        root.setFather(search.getRight());
+                    }
+                    else
+                    {
+                        father.setRight(search.getRight());
+                    }
+                }
+                //Remoção com 2 filhos.
+                /*
+                 * Ir para direita e depois enquanto existir navegando somente para esquerda.
+                 */
+                else
+                {
+
+                    BinaryTreeNode<E> replaceNode = search.getRight();
+                    while(replaceNode.hasLeftNode())
+                    {
+                        replaceNode = replaceNode.getLeft();
+                    }
+
+                    //Não existe filhos a esquerda, cons
+                    if(replaceNode.equals(search.getRight()))
+                    {
+                        if(replaceNode.hasRightNode())
+                        {
+                            search.setRight(replaceNode.getRight());
+                            replaceNode.getRight().setFather(search);
+                        }else
+                        {
+                            search.setRight(null);
+                            replaceNode.setFather(null);
+                        }
+                        search.setObject(replaceNode.getObject());
+
+                    }
+                    //Se existir filho a esquerda,
+                    else
+                    {
+                        search.setObject(replaceNode.getObject());
+                        replaceNode.getFather().setLeft(null);
+                        replaceNode.setFather(null);
+                    }
+                }
+
+                size--;
+                return search.getObject();
             }
-
-
-            size--;
         }
-        return false;
     }
 
     @Override
@@ -137,13 +222,16 @@ public class BinaryTree<E extends Comparable<E>> implements Common<E> {
     }
 
     @Override
-    public E getLast() {
+    public E getLast()
+    {
         return null;
     }
 
     @Override
-    public void disposeAll() {
-
+    public void disposeAll()
+    {
+        root.setFather(null);
+        size = 0;
     }
 
     public void printList()

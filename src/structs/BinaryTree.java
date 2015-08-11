@@ -28,7 +28,6 @@ public class BinaryTree<E extends Comparable<E>> implements Common<E> {
         {
             root.setFather(node);
             node.setFather(root);
-            size++;
         }else
         {
             BinaryTreeNode<E> search = root.getFather();

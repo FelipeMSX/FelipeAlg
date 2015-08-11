@@ -46,7 +46,9 @@ public class BinaryTree<E extends Comparable<E>> implements Common<E> {
                         break;
                     }
 
-                }else if (search.getObject().compareTo(object) >= 1) {
+                }
+                else if (search.getObject().compareTo(object) >= 1)
+                {
                     if (search.hasLeftNode())
                     {
                         search = search.getLeft(); // avançar para direita;
@@ -56,10 +58,9 @@ public class BinaryTree<E extends Comparable<E>> implements Common<E> {
                         node.setFather(search);
                         break;
                     }
-                }else // ==0 não permite itens iguais
-                {
-                    throw new EqualsElementException("Not allowed equals elements.");
                 }
+                else // ==0 não permite itens iguais
+                    throw new EqualsElementException("Not allowed equals elements.");
             }
         }
         size++;
@@ -71,62 +72,63 @@ public class BinaryTree<E extends Comparable<E>> implements Common<E> {
         if(isEmpty())
         {
             throw new EmptyListException("The list no contain element this element.");
-        }else
+        }
+        else
         {
-            BinaryTreeNode<E> search =  getNode(object);
+            BinaryTreeNode<E> removeNode =  getNode(object);
 
-            if(search == null)
+            if(removeNode == null)
             {
                 throw new ElementNotFoundException("The element not exists in the list.");
-            }else
+            }
+            else
             {
+                E objectReturn = removeNode.getObject();
+
                 //Remoção do nó sem filhos.
-                if(!search.hasLeftNode() && !search.hasRightNode())
+                if(!removeNode.hasLeftNode() && !removeNode.hasRightNode())
                 {
+                    BinaryTreeNode<E> father = removeNode.getFather();
                     //Remoção do nó raiz
-                    if(size == 1)
-                    {
-                        root.setFather(null);
-                    }
-                    //Remoção de qualquer outro nó
-                    else
-                    {
-                        BinaryTreeNode<E> father = search.getFather();
-                        if(father.hasLeftNode() && father.getLeft().equals(search))
-                            father.setLeft(null);
-                        else
-                            father.setRight(null);
-                    }
+	                if(root.getFather().equals(removeNode))
+		                root.setFather(null);
+	                else if(father.hasLeftNode() && father.getLeft().equals(removeNode))
+		                father.setLeft(null);
+	                else
+		                father.setRight(null);
+
+	                //Cortando Ligações do nó.
+	                removeNode.setFather(null);
                 }
                 //Remoção com só um filho na esquerda.
-                else if(search.hasLeftNode() && !search.hasRightNode())
+                else if(removeNode.hasLeftNode() && !removeNode.hasRightNode())
                 {
-                    BinaryTreeNode<E> father = search.getFather();
-                    search.getLeft().setFather(father);
-                    if(search.equals(root.getFather()))
-                    {
-                        root.setFather(search.getLeft());
-                    }
+                    BinaryTreeNode<E> father = removeNode.getFather();
+                    removeNode.getLeft().setFather(father);
+                    if(removeNode.equals(root.getFather()))
+                        root.setFather(removeNode.getLeft());
                     else
-                    {
-                        father.setLeft(search.getLeft());
-                    }
+                        father.setLeft(removeNode.getLeft());
+
+	                //Cortando Ligações do nó.
+	                removeNode.setFather(null);
+	                removeNode.setLeft(null);
                 }
                 //Remoção com só um filho na direita.
-                else if(!search.hasLeftNode() && search.hasRightNode())
+                else if(!removeNode.hasLeftNode() && removeNode.hasRightNode())
                 {
-                    BinaryTreeNode<E> father = search.getFather();
-                    search.getRight().setFather(father);
+                    BinaryTreeNode<E> father = removeNode.getFather();
+                    removeNode.getRight().setFather(father);
 
-                    search.getRight().setFather(father);
-                    if(search.equals(root.getFather()))
-                    {
-                        root.setFather(search.getRight());
-                    }
+                    removeNode.getRight().setFather(father);
+                    if(removeNode.equals(root.getFather()))
+                        root.setFather(removeNode.getRight());
                     else
-                    {
-                        father.setRight(search.getRight());
-                    }
+                        father.setRight(removeNode.getRight());
+
+	                //Cortando Ligações do nó.
+	                removeNode.setFather(null);
+	                removeNode.setRight(null);
                 }
                 //Remoção com 2 filhos.
                 /*
@@ -135,38 +137,38 @@ public class BinaryTree<E extends Comparable<E>> implements Common<E> {
                 else
                 {
 
-                    BinaryTreeNode<E> replaceNode = search.getRight();
+                    BinaryTreeNode<E> replaceNode = removeNode.getRight();
                     while(replaceNode.hasLeftNode())
                     {
                         replaceNode = replaceNode.getLeft();
                     }
 
-                    //Não existe filhos a esquerda, cons
-                    if(replaceNode.equals(search.getRight()))
+                    //Não existe filhos a esquerda,
+                    if(replaceNode.equals(removeNode.getRight()))
                     {
                         if(replaceNode.hasRightNode())
-                        {
-                            search.setRight(replaceNode.getRight());
-                            replaceNode.getRight().setFather(search);
-                        }else
-                        {
-                            search.setRight(null);
-                            replaceNode.setFather(null);
-                        }
-                        search.setObject(replaceNode.getObject());
+                            replaceNode.getRight().setFather(removeNode);
+
+	                    removeNode.setRight(replaceNode.getRight());
+	                    removeNode.setObject(replaceNode.getObject());
+
+	                    //Cortando Ligações do nó.
+	                    replaceNode.setFather(null);
+	                    replaceNode.setRight(null);
 
                     }
                     //Se existir filho a esquerda,
                     else
                     {
-                        search.setObject(replaceNode.getObject());
+                        removeNode.setObject(replaceNode.getObject());
+	                    //Cortando Ligações do nó.
                         replaceNode.getFather().setLeft(null);
                         replaceNode.setFather(null);
                     }
                 }
 
                 size--;
-                return search.getObject();
+                return objectReturn;
             }
         }
     }
@@ -196,20 +198,14 @@ public class BinaryTree<E extends Comparable<E>> implements Common<E> {
             //Encontrar o nó a ser removido
             while(search != null)
             {
-                //Avançara para direita
+                //Avançará para direita
                 if( search.getObject().compareTo(object) <= -1 )
-                {
                     search = search.getRight();
-                }
-                //Avançara para esquerda
+                //Avançará para esquerda
                 else if (search.getObject().compareTo(object) >= 1)
-                {
                     search = search.getLeft();
-                }
                 else
-                {
                     break;
-                }
          }
             return (search != null) ? search : null;
         }

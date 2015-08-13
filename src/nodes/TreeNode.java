@@ -1,44 +1,44 @@
 package  nodes;
 
-public class BinaryTreeNode<E> extends Node<E> {
+public class TreeNode<E> extends Node<E>{
 	
-	private BinaryTreeNode<E> father,left,right;
+	private TreeNode<E> father,left,right;
 	
-	public BinaryTreeNode(){
+	public TreeNode(){
 		super();
 		this.father = null;
 		this.left = null;
 		this.right = null;
 	}
 	
-	public BinaryTreeNode(E object){
+	public TreeNode(E object){
 		super(object);
 		this.father = null;
 		this.left = null;
 		this.right = null;
 	}
 
-	public BinaryTreeNode<E> getFather() {
+	public TreeNode<E> getFather() {
 		return father;
 	}
 
-	public void setFather(BinaryTreeNode<E> father) {
+	public void setFather(TreeNode<E> father) {
 		this.father = father;
 	}
 
-	public BinaryTreeNode<E> getLeft() {
+	public TreeNode<E> getLeft() {
 		return left;
 	}
 
-	public void setLeft(BinaryTreeNode<E> left) {
+	public void setLeft(TreeNode<E> left) {
 		this.left = left;
 	}
 
-	public BinaryTreeNode<E> getRight() {
+	public TreeNode<E> getRight() {
 		return right;
 	}
 
-	public void setRight(BinaryTreeNode<E> right) {
+	public void setRight(TreeNode<E> right) {
 		this.right = right;
 	}
 

@@ -1,4 +1,4 @@
-package interfaces;
+package _interfaces;
 
 
 public interface Common<E> {

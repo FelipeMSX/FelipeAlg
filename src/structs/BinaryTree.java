@@ -1,36 +1,33 @@
 package structs;
 
+import _abstract.Tree;
 import exception.ElementNotFoundException;
 import exception.EmptyListException;
 import exception.EqualsElementException;
-import interfaces.Common;
-import nodes.BinaryTreeNode;
+import _interfaces.Common;
+import nodes.TreeNode;
 
 /**
  * Created by Felipe on 09/08/2015.
  */
-public class BinaryTree<E extends Comparable<E>> implements Common<E> {
+public class BinaryTree<E extends Comparable<E>> extends Tree<E> {
 
-    private BinaryTreeNode<E> root; // ponteiro para o primeiro nó, não possui dados.
-    private int size;
-
-    public BinaryTree(){
-        root = new BinaryTreeNode<E>();
-        size = 0;
-
+    public BinaryTree()
+    {
+        super();
     }
 
     @Override
     public boolean insert(E object) throws EqualsElementException
     {
-        BinaryTreeNode<E> node = new BinaryTreeNode<E>(object);
+        TreeNode<E> node = new TreeNode<E>(object);
         if(isEmpty())
         {
             root.setFather(node);
             node.setFather(root);
         }else
         {
-            BinaryTreeNode<E> search = root.getFather();
+            TreeNode<E> search = root.getFather();
 
             while(search != null){
                 //(4 < 10) <= -1 OK; avançar para direita para encontrar valores corretos.
@@ -75,7 +72,7 @@ public class BinaryTree<E extends Comparable<E>> implements Common<E> {
         }
         else
         {
-            BinaryTreeNode<E> removeNode =  getNode(object);
+            TreeNode<E> removeNode =  getNode(object);
 
             if(removeNode == null)
             {
@@ -88,7 +85,7 @@ public class BinaryTree<E extends Comparable<E>> implements Common<E> {
                 //Remoção do nó sem filhos.
                 if(!removeNode.hasLeftNode() && !removeNode.hasRightNode())
                 {
-                    BinaryTreeNode<E> father = removeNode.getFather();
+                    TreeNode<E> father = removeNode.getFather();
                     //Remoção do nó raiz
 	                if(root.getFather().equals(removeNode))
 		                root.setFather(null);
@@ -103,7 +100,7 @@ public class BinaryTree<E extends Comparable<E>> implements Common<E> {
                 //Remoção com só um filho na esquerda.
                 else if(removeNode.hasLeftNode() && !removeNode.hasRightNode())
                 {
-                    BinaryTreeNode<E> father = removeNode.getFather();
+                    TreeNode<E> father = removeNode.getFather();
                     removeNode.getLeft().setFather(father);
                     if(removeNode.equals(root.getFather()))
                         root.setFather(removeNode.getLeft());
@@ -117,7 +114,7 @@ public class BinaryTree<E extends Comparable<E>> implements Common<E> {
                 //Remoção com só um filho na direita.
                 else if(!removeNode.hasLeftNode() && removeNode.hasRightNode())
                 {
-                    BinaryTreeNode<E> father = removeNode.getFather();
+                    TreeNode<E> father = removeNode.getFather();
                     removeNode.getRight().setFather(father);
 
                     removeNode.getRight().setFather(father);
@@ -137,7 +134,7 @@ public class BinaryTree<E extends Comparable<E>> implements Common<E> {
                 else
                 {
 
-                    BinaryTreeNode<E> replaceNode = removeNode.getRight();
+                    TreeNode<E> replaceNode = removeNode.getRight();
                     while(replaceNode.hasLeftNode())
                     {
                         replaceNode = replaceNode.getLeft();
@@ -174,45 +171,14 @@ public class BinaryTree<E extends Comparable<E>> implements Common<E> {
     }
 
     @Override
-    public boolean isEmpty() {
-        return (size == 0);
+    protected TreeNode<E> getNode(E object)
+    {
+        return null;
     }
 
     @Override
-    public E getItem(E object)
+    public E getFirst()
     {
-        BinaryTreeNode<E> node = getNode(object);
-        return (node !=null) ? node.getObject() : null;
-    }
-
-    private BinaryTreeNode<E> getNode(E object)
-    {
-        if(isEmpty())
-        {
-            throw new EmptyListException("The list no contain element to remove it.");
-        }
-        else
-        {
-            BinaryTreeNode<E> search = root.getFather();
-
-            //Encontrar o nó a ser removido
-            while(search != null)
-            {
-                //Avançará para direita
-                if( search.getObject().compareTo(object) <= -1 )
-                    search = search.getRight();
-                //Avançará para esquerda
-                else if (search.getObject().compareTo(object) >= 1)
-                    search = search.getLeft();
-                else
-                    break;
-         }
-            return (search != null) ? search : null;
-        }
-    }
-
-    @Override
-    public E getFirst() {
         return null;
     }
 
@@ -222,27 +188,5 @@ public class BinaryTree<E extends Comparable<E>> implements Common<E> {
         return null;
     }
 
-    @Override
-    public void disposeAll()
-    {
-        root.setFather(null);
-        size = 0;
-    }
 
-    public void printList()
-    {
-        BinaryTreeNode node = root.getFather();
-
-        printALL(node);
-    }
-
-    private void printALL(BinaryTreeNode node)
-    {
-        if(node != null)
-        {
-            printALL(node.getLeft());
-            System.out.println(node.getObject());
-            printALL(node.getRight());
-        }
-    }
 }

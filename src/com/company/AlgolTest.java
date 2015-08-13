@@ -36,6 +36,7 @@ public class AlgolTest {
 
 
         BinaryTree<ObjectTeste> tree = new BinaryTree<ObjectTeste>();
+
         tree.insert(o1);
         tree.insert(o2);
         tree.insert(o3);

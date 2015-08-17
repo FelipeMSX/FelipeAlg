@@ -1,10 +1,10 @@
-package nodes;
+package _abstract;
 
 /**
  * @author FelipeMSX
  *
  */
-public class Node<E> {
+public abstract class Node<E> {
 	private E object;
 	
 	public Node(){

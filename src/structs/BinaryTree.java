@@ -4,13 +4,12 @@ import _abstract.Tree;
 import exception.ElementNotFoundException;
 import exception.EmptyListException;
 import exception.EqualsElementException;
-import _interfaces.Common;
-import nodes.TreeNode;
+import nodes.TreeNode_Binary;
 
 /**
  * Created by Felipe on 09/08/2015.
  */
-public class BinaryTree<E extends Comparable<E>> extends Tree<E> {
+public class BinaryTree<E extends Comparable<E>> extends Tree<E, TreeNode_Binary<E>> {
 
     public BinaryTree()
     {
@@ -20,22 +19,22 @@ public class BinaryTree<E extends Comparable<E>> extends Tree<E> {
     @Override
     public boolean insert(E object) throws EqualsElementException
     {
-        TreeNode<E> node = new TreeNode<E>(object);
+        TreeNode_Binary<E> node = new TreeNode_Binary<E>(object);
         if(isEmpty())
         {
             root.setFather(node);
             node.setFather(root);
         }else
         {
-            TreeNode<E> search = root.getFather();
+            TreeNode_Binary<E> search = root.getFather();
 
             while(search != null){
-                //(4 < 10) <= -1 OK; avançar para direita para encontrar valores corretos.
+                //(4 < 10) <= -1 OK; avanï¿½ar para direita para encontrar valores corretos.
                 if( search.getObject().compareTo(object) <= -1 )
                 {
                     if(search.hasRightNode())
                     {
-                        search = search.getRight();  // avançar para direita;
+                        search = search.getRight();  // avanï¿½ar para direita;
                     }else
                     {
                         search.setRight(node);
@@ -48,7 +47,7 @@ public class BinaryTree<E extends Comparable<E>> extends Tree<E> {
                 {
                     if (search.hasLeftNode())
                     {
-                        search = search.getLeft(); // avançar para direita;
+                        search = search.getLeft(); // avanï¿½ar para direita;
                     } else
                     {
                         search.setLeft(node);
@@ -56,7 +55,7 @@ public class BinaryTree<E extends Comparable<E>> extends Tree<E> {
                         break;
                     }
                 }
-                else // ==0 não permite itens iguais
+                else // ==0 nï¿½o permite itens iguais
                     throw new EqualsElementException("Not allowed equals elements.");
             }
         }
@@ -72,7 +71,7 @@ public class BinaryTree<E extends Comparable<E>> extends Tree<E> {
         }
         else
         {
-            TreeNode<E> removeNode =  getNode(object);
+            TreeNode_Binary<E> removeNode =  getNode(object);
 
             if(removeNode == null)
             {
@@ -82,11 +81,11 @@ public class BinaryTree<E extends Comparable<E>> extends Tree<E> {
             {
                 E objectReturn = removeNode.getObject();
 
-                //Remoção do nó sem filhos.
+                //Remoï¿½ï¿½o do nï¿½ sem filhos.
                 if(!removeNode.hasLeftNode() && !removeNode.hasRightNode())
                 {
-                    TreeNode<E> father = removeNode.getFather();
-                    //Remoção do nó raiz
+                    TreeNode_Binary<E> father = removeNode.getFather();
+                    //Remoï¿½ï¿½o do nï¿½ raiz
 	                if(root.getFather().equals(removeNode))
 		                root.setFather(null);
 	                else if(father.hasLeftNode() && father.getLeft().equals(removeNode))
@@ -94,27 +93,27 @@ public class BinaryTree<E extends Comparable<E>> extends Tree<E> {
 	                else
 		                father.setRight(null);
 
-	                //Cortando Ligações do nó.
+	                //Cortando Ligaï¿½ï¿½es do nï¿½.
 	                removeNode.setFather(null);
                 }
-                //Remoção com só um filho na esquerda.
+                //Remoï¿½ï¿½o com sï¿½ um filho na esquerda.
                 else if(removeNode.hasLeftNode() && !removeNode.hasRightNode())
                 {
-                    TreeNode<E> father = removeNode.getFather();
+                    TreeNode_Binary<E> father = removeNode.getFather();
                     removeNode.getLeft().setFather(father);
                     if(removeNode.equals(root.getFather()))
                         root.setFather(removeNode.getLeft());
                     else
                         father.setLeft(removeNode.getLeft());
 
-	                //Cortando Ligações do nó.
+	                //Cortando Ligaï¿½ï¿½es do nï¿½.
 	                removeNode.setFather(null);
 	                removeNode.setLeft(null);
                 }
-                //Remoção com só um filho na direita.
+                //Remoï¿½ï¿½o com sï¿½ um filho na direita.
                 else if(!removeNode.hasLeftNode() && removeNode.hasRightNode())
                 {
-                    TreeNode<E> father = removeNode.getFather();
+                    TreeNode_Binary<E> father = removeNode.getFather();
                     removeNode.getRight().setFather(father);
 
                     removeNode.getRight().setFather(father);
@@ -123,24 +122,24 @@ public class BinaryTree<E extends Comparable<E>> extends Tree<E> {
                     else
                         father.setRight(removeNode.getRight());
 
-	                //Cortando Ligações do nó.
+	                //Cortando Ligaï¿½ï¿½es do nï¿½.
 	                removeNode.setFather(null);
 	                removeNode.setRight(null);
                 }
-                //Remoção com 2 filhos.
+                //Remoï¿½ï¿½o com 2 filhos.
                 /*
                  * Ir para direita e depois enquanto existir navegando somente para esquerda.
                  */
                 else
                 {
 
-                    TreeNode<E> replaceNode = removeNode.getRight();
+                    TreeNode_Binary<E> replaceNode = removeNode.getRight();
                     while(replaceNode.hasLeftNode())
                     {
                         replaceNode = replaceNode.getLeft();
                     }
 
-                    //Não existe filhos a esquerda,
+                    //Nï¿½o existe filhos a esquerda,
                     if(replaceNode.equals(removeNode.getRight()))
                     {
                         if(replaceNode.hasRightNode())
@@ -149,7 +148,7 @@ public class BinaryTree<E extends Comparable<E>> extends Tree<E> {
 	                    removeNode.setRight(replaceNode.getRight());
 	                    removeNode.setObject(replaceNode.getObject());
 
-	                    //Cortando Ligações do nó.
+	                    //Cortando Ligaï¿½ï¿½es do nï¿½.
 	                    replaceNode.setFather(null);
 	                    replaceNode.setRight(null);
 
@@ -158,7 +157,7 @@ public class BinaryTree<E extends Comparable<E>> extends Tree<E> {
                     else
                     {
                         removeNode.setObject(replaceNode.getObject());
-	                    //Cortando Ligações do nó.
+	                    //Cortando Ligaï¿½ï¿½es do nï¿½.
                         replaceNode.getFather().setLeft(null);
                         replaceNode.setFather(null);
                     }
@@ -171,7 +170,7 @@ public class BinaryTree<E extends Comparable<E>> extends Tree<E> {
     }
 
     @Override
-    protected TreeNode<E> getNode(E object)
+    protected TreeNode_Binary<E> getNode(E object)
     {
         return null;
     }

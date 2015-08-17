@@ -2,19 +2,17 @@ package _abstract;
 
 import _interfaces.Common;
 import exception.EmptyListException;
-import nodes.TreeNode;
 
 /**
  * Created by 3tecnos999 on 13/08/2015.
  */
-public abstract class Tree<E extends Comparable<E>> implements Common<E> {
+public abstract class Tree<E extends Comparable<E>,V extends TreeNode<E,V>> implements Common<E> {
 
-    protected TreeNode<E> root; // ponteiro para o primeiro nó, não possui dados.
+    protected V root; // ponteiro para o primeiro nó, não possui dados.
     protected int size;
 
     public Tree()
     {
-        root = new TreeNode<>();
         size = 0;
     }
 
@@ -38,14 +36,14 @@ public abstract class Tree<E extends Comparable<E>> implements Common<E> {
     @Override
     public E getItem(E object)
     {
-        TreeNode<E> node = getNode(object);
+        TreeNode<E,V> node = getNode(object);
         return (node !=null) ? node.getObject() : null;
     }
 
-    protected abstract TreeNode<E>  getNode(E object);
+    protected abstract V  getNode(E object);
 
     //Preciso implementar Pilha primeiro;
-    protected E depthFirstSearch(E object)
+    protected V depthFirstSearch(E object)
     {
         if(isEmpty())
         {
@@ -60,22 +58,16 @@ public abstract class Tree<E extends Comparable<E>> implements Common<E> {
         return null;
     }
 
-    protected TreeNode<E> breadthFirstSearch(E object){return null;}
+    protected V breadthFirstSearch(E object){return null;}
     //Somenete para teste
     public void printList()
     {
-        TreeNode node = root.getFather();
-        printALL(node);
+
     }
 
     //Somenete para teste
-    private void printALL(TreeNode node)
+    private void printALL()
     {
-        if(node != null)
-        {
-            printALL(node.getLeft());
-            System.out.println(node.getObject());
-            printALL(node.getRight());
-        }
+
     }
 }

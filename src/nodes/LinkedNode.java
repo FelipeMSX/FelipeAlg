@@ -1,5 +1,7 @@
 package nodes;
 
+import _abstract.Node;
+
 /**
  * @author FelipeMSX
  *

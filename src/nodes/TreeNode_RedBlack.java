@@ -5,7 +5,7 @@ import _abstract.TreeNode;
 /**
  * Created by 3tecnos999 on 17/08/2015.
  */
-public class TreeNode_RedBlack<E> extends  TreeNode<E,TreeNode_RedBlack<E>> {
+public class TreeNode_RedBlack<E> extends  TreeNode<E> {
     public enum Color {
         RED(0), BLACK(1);
         private int value;

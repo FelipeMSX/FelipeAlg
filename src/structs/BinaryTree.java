@@ -14,6 +14,7 @@ public class BinaryTree<E extends Comparable<E>> extends Tree<E, TreeNode_Binary
     public BinaryTree()
     {
         super();
+        root = new TreeNode_Binary();
     }
 
     @Override
@@ -26,10 +27,10 @@ public class BinaryTree<E extends Comparable<E>> extends Tree<E, TreeNode_Binary
             node.setFather(root);
         }else
         {
-            TreeNode_Binary<E> search = root.getFather();
+            TreeNode_Binary<E> search = (TreeNode_Binary<E>)root.getFather();
 
             while(search != null){
-                //(4 < 10) <= -1 OK; avan�ar para direita para encontrar valores corretos.
+                //(4 < 10) <= -1 OK; avançar para direita para encontrar valores corretos.
                 if( search.getObject().compareTo(object) <= -1 )
                 {
                     if(search.hasRightNode())
@@ -84,7 +85,7 @@ public class BinaryTree<E extends Comparable<E>> extends Tree<E, TreeNode_Binary
                 //Remo��o do n� sem filhos.
                 if(!removeNode.hasLeftNode() && !removeNode.hasRightNode())
                 {
-                    TreeNode_Binary<E> father = removeNode.getFather();
+                    TreeNode_Binary<E> father = (TreeNode_Binary<E>)removeNode.getFather();
                     //Remo��o do n� raiz
 	                if(root.getFather().equals(removeNode))
 		                root.setFather(null);
@@ -99,7 +100,7 @@ public class BinaryTree<E extends Comparable<E>> extends Tree<E, TreeNode_Binary
                 //Remo��o com s� um filho na esquerda.
                 else if(removeNode.hasLeftNode() && !removeNode.hasRightNode())
                 {
-                    TreeNode_Binary<E> father = removeNode.getFather();
+                    TreeNode_Binary<E> father = (TreeNode_Binary<E>)removeNode.getFather();
                     removeNode.getLeft().setFather(father);
                     if(removeNode.equals(root.getFather()))
                         root.setFather(removeNode.getLeft());
@@ -113,7 +114,7 @@ public class BinaryTree<E extends Comparable<E>> extends Tree<E, TreeNode_Binary
                 //Remo��o com s� um filho na direita.
                 else if(!removeNode.hasLeftNode() && removeNode.hasRightNode())
                 {
-                    TreeNode_Binary<E> father = removeNode.getFather();
+                    TreeNode_Binary<E> father = (TreeNode_Binary<E>)removeNode.getFather();
                     removeNode.getRight().setFather(father);
 
                     removeNode.getRight().setFather(father);
@@ -157,8 +158,9 @@ public class BinaryTree<E extends Comparable<E>> extends Tree<E, TreeNode_Binary
                     else
                     {
                         removeNode.setObject(replaceNode.getObject());
-	                    //Cortando Liga��es do n�.
-                        replaceNode.getFather().setLeft(null);
+	                    //Cortando Ligacoes do nó.
+
+                        ((TreeNode_Binary<E>)replaceNode.getFather()).setLeft(null);
                         replaceNode.setFather(null);
                     }
                 }
@@ -172,20 +174,64 @@ public class BinaryTree<E extends Comparable<E>> extends Tree<E, TreeNode_Binary
     @Override
     protected TreeNode_Binary<E> getNode(E object)
     {
-        return null;
+        if(isEmpty())
+        {
+            throw new EmptyListException();
+        }else
+        {
+            TreeNode_Binary<E> search = (TreeNode_Binary<E>)root.getFather();
+            while(search != null)
+            {
+                if(search.getObject().compareTo(object) < 0)
+                {
+                    search = search.getRight();
+                }
+                else if((search.getObject().compareTo(object) > 0))
+                {
+                  search = search.getLeft();
+                }
+                else
+                {
+                   return search;
+                }
+            }
+            return null;
+        }
     }
 
     @Override
+    //Primeiro mais à esquerda.
     public E getFirst()
     {
-        return null;
+        if(isEmpty())
+        {
+            throw new EmptyListException();
+        }else
+        {
+            TreeNode_Binary<E> search = (TreeNode_Binary<E>)root.getFather();
+            while(search.hasLeftNode())
+            {
+                    search = search.getLeft();
+            }
+            return search.getObject();
+        }
     }
 
     @Override
     public E getLast()
     {
-        return null;
+        if(isEmpty())
+        {
+            throw new EmptyListException();
+        }else
+        {
+            TreeNode_Binary<E> search = (TreeNode_Binary<E>)root.getFather();
+            while(search.hasRightNode())
+            {
+                search = search.getRight();
+            }
+            return search.getObject();
+        }
     }
-
 
 }

@@ -6,7 +6,7 @@ import exception.EmptyListException;
 /**
  * Created by 3tecnos999 on 13/08/2015.
  */
-public abstract class Tree<E extends Comparable<E>,V extends TreeNode<E,V>> implements Common<E> {
+public abstract class Tree<E extends Comparable<E>,V extends TreeNode<E>> implements Common<E> {
 
     protected V root; // ponteiro para o primeiro nó, não possui dados.
     protected int size;
@@ -36,7 +36,7 @@ public abstract class Tree<E extends Comparable<E>,V extends TreeNode<E,V>> impl
     @Override
     public E getItem(E object)
     {
-        TreeNode<E,V> node = getNode(object);
+        TreeNode<E> node = getNode(object);
         return (node !=null) ? node.getObject() : null;
     }
 
@@ -59,15 +59,4 @@ public abstract class Tree<E extends Comparable<E>,V extends TreeNode<E,V>> impl
     }
 
     protected V breadthFirstSearch(E object){return null;}
-    //Somenete para teste
-    public void printList()
-    {
-
-    }
-
-    //Somenete para teste
-    private void printALL()
-    {
-
-    }
 }

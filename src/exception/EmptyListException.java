@@ -9,4 +9,10 @@ public class EmptyListException extends  RuntimeException {
     {
         super(message);
     }
+
+    //Default Message
+    public EmptyListException()
+    {
+        super( "The list no contain element this element.");
+    }
 }

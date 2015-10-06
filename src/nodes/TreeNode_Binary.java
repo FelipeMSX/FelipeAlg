@@ -2,9 +2,9 @@ package  nodes;
 
 import _abstract.TreeNode;
 
-public class TreeNode_Binary<E> extends TreeNode<E, TreeNode_Binary<E>> {
+public class TreeNode_Binary<E> extends TreeNode<E> {
 	
-	public TreeNode_Binary<E> left,right;
+	private TreeNode_Binary<E> left,right;
 	
 	public TreeNode_Binary(){
 		super();

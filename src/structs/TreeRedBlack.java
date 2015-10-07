@@ -15,7 +15,7 @@ public class TreeRedBlack<E extends Comparable<E>> extends Tree<E, TreeNode_Bina
     }
 
     @Override
-    public boolean insert(E object) throws Exception {
+    public boolean insert(E object) {
         return false;
     }
 

@@ -6,7 +6,7 @@ import exception.EmptyListException;
 /**
  * Created by 3tecnos999 on 13/08/2015.
  */
-public abstract class Tree<E extends Comparable<E>,V extends TreeNode<E>> implements Common<E> {
+public abstract class Tree<E ,V extends TreeNode<E>> implements Common<E> {
 
     protected V root; // ponteiro para o primeiro nó, não possui dados.
     protected int size;

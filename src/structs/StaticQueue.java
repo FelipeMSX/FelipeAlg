@@ -1,11 +1,13 @@
 package structs;
 
 import _abstract.StaticStruct;
+import _interfaces.Queue_Stacks;
+import exception.EmptyListException;
 
 /**
  * Created by Felipe on 06/10/2015.
  */
-public class StaticQueue<E extends Comparable<E>> extends StaticStruct<E> {
+public class StaticQueue<E> extends StaticStruct<E> implements Queue_Stacks<E>{
 
 
 	public StaticQueue()
@@ -13,23 +15,60 @@ public class StaticQueue<E extends Comparable<E>> extends StaticStruct<E> {
 		super();
 	}
 
-	@Override
-	protected void doubleCapacity() {
-
+	public StaticQueue(int size, int maxSize)
+	{
+		super(size,maxSize);
 	}
 
 	@Override
 	public boolean insert(E object) {
-		return false;
+		if(isFull())
+		{
+			doubleCapacity();
+		}else
+		{
+			vector[size++] = object;
+
+		}
+		return true;
+	}
+	@Override
+	public E remove() {
+		if(isEmpty())
+		{
+			throw new EmptyListException();
+		}else
+		{
+			E temp = vector[0];
+			size--;
+			for(int i =0; i < size;i++)
+			{
+				vector[i] = vector[i+1];
+			}
+			return temp;
+		}
 	}
 
 	@Override
-	public E remove(E object) {
-		return null;
+	protected void doubleCapacity() {
+		if(size == maxSize)
+		{
+			E[] temp = (E[])new Object[size*2];
+			maxSize *=2;
+
+			for(int i = 0; i < size; i++)
+			{
+				temp[i] = vector[i];
+			}
+			vector = temp;
+		}
 	}
 
 	@Override
 	public void disposeAll() {
-
+		vector = null;
+		size = 0;
 	}
+
+
 }

@@ -9,6 +9,12 @@ public class ObjectTeste implements Comparable<ObjectTeste>{
 		this.name = "";
 	}
 
+	public ObjectTeste(int id, String name){
+		this.iD = id;
+		this.name = name;
+	}
+
+
 	@Override
 	public int compareTo(ObjectTeste arg0) {
 		if(this.iD > arg0.getiD())

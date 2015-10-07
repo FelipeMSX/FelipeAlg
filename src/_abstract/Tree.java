@@ -33,7 +33,6 @@ public abstract class Tree<E ,V extends TreeNode<E>> implements Common<E> {
         return (size == 0);
     }
 
-    @Override
     public E getItem(E object)
     {
         TreeNode<E> node = getNode(object);

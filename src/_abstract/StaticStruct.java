@@ -6,15 +6,24 @@ import exception.EmptyListException;
 /**
  * Created by Felipe on 06/10/2015.
  */
-public abstract  class StaticStruct<E> implements Common<E> {
+public abstract class StaticStruct<E> implements Common<E> {
 
 	protected E[] vector;
 	protected int size;
 	protected int maxSize;
+
 	public StaticStruct()
 	{
 		size = 0;
 		maxSize = 100;
+		vector = (E[]) new Object[maxSize];
+	}
+
+	public StaticStruct(int size, int maxSize)
+	{
+		this.size = size;
+		this.maxSize = maxSize;
+		vector = (E[]) new Object[maxSize];
 	}
 
 	abstract protected void doubleCapacity();
@@ -27,11 +36,6 @@ public abstract  class StaticStruct<E> implements Common<E> {
 	public boolean isFull()
 	{
 		return size == maxSize;
-	}
-
-	@Override @Deprecated
-	public E getItem(E object) {
-		return null;
 	}
 
 	@Override
@@ -48,6 +52,11 @@ public abstract  class StaticStruct<E> implements Common<E> {
 			return vector[size-1];
 		else
 			throw new EmptyListException();
+	}
+
+	public int getSize()
+	{
+		return size;
 	}
 
 }

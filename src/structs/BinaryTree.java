@@ -17,7 +17,7 @@ public class BinaryTree<E extends Comparable<E>> extends Tree<E, TreeNode_Binary
         root = new TreeNode_Binary();
     }
 
-    @Override
+
     public boolean insert(E object) throws EqualsElementException
     {
         TreeNode_Binary<E> node = new TreeNode_Binary<E>(object);
@@ -64,7 +64,7 @@ public class BinaryTree<E extends Comparable<E>> extends Tree<E, TreeNode_Binary
         return true;
     }
 
-    @Override
+
     public E remove(E object) {
         if(isEmpty())
         {

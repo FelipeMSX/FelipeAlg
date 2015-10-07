@@ -26,4 +26,9 @@ public class LinkedNode<E> extends Node<E> {
 	public void setNext(LinkedNode<E> next) {
 		this.next = next;
 	}
+
+	public boolean hasNextNode()
+	{
+		return (next != null);
+	}
 }

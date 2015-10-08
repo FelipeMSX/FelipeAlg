@@ -1,8 +1,8 @@
 package _abstract;
 
-public class TreeNode<E> extends Node<E> {
+public abstract class TreeNode<E,V> extends Node<E> {
 
-    private TreeNode<E> father;
+    private V father;
 
     public TreeNode(){
         super();
@@ -14,11 +14,11 @@ public class TreeNode<E> extends Node<E> {
         this.father = null;
     }
 
-    public TreeNode<E> getFather() {
+    public V getFather() {
         return father;
     }
 
-    public void setFather(TreeNode<E> father) {
+    public void setFather(V father) {
         this.father = father;
     }
 

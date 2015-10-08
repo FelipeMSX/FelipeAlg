@@ -2,7 +2,7 @@ package  nodes;
 
 import _abstract.TreeNode;
 
-public class TreeNode_Binary<E> extends TreeNode<E> {
+public class TreeNode_Binary<E> extends TreeNode<E,TreeNode_Binary<E>> {
 	
 	private TreeNode_Binary<E> left,right;
 	
@@ -10,6 +10,7 @@ public class TreeNode_Binary<E> extends TreeNode<E> {
 		super();
 		this.left = null;
 		this.right = null;
+
 	}
 	
 	public TreeNode_Binary(E object){

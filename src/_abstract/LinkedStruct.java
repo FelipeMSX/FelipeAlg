@@ -7,15 +7,14 @@ import nodes.LinkedNode;
 /**
  * Created by Felipe on 07/10/2015.
  */
-public abstract class LinkedStruct<E,V> implements Common<E> {
+public abstract class LinkedStruct<E>  implements Common<E> {
 
 	//Não possui dado, é somente o ponteiro para o primeiro elemento.
-	protected V head;
+	protected LinkedNode<E> head ;
 	protected int size;
 
 	public LinkedStruct()
 	{
-		this.head = (V) new Object();
 		this.size = 0;
 	}
 

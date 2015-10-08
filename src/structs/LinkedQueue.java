@@ -3,17 +3,17 @@ package structs;
 import _abstract.LinkedStruct;
 import _interfaces.Queue_Stacks;
 import exception.EmptyListException;
-import nodes.LinkedDoubleNode;
 import nodes.LinkedNode;
 
 /**
  * Created by Felipe on 06/10/2015.
  */
-public class LinkedQueue<E> extends LinkedStruct<E, LinkedNode<E>> implements Queue_Stacks<E> {
+public class LinkedQueue<E> extends LinkedStruct<E> implements Queue_Stacks<E> {
 
 
 	public LinkedQueue() {
 		super();
+		this.head = new LinkedNode();
 	}
 
 	@Override
@@ -24,8 +24,16 @@ public class LinkedQueue<E> extends LinkedStruct<E, LinkedNode<E>> implements Qu
 
 	@Override
 	public boolean insert(E object) {
+		LinkedNode<E> node = new LinkedNode<>(object);
+		if(!isEmpty())
+		{
+			node.setNext(head.getNext());
+		}
 
-		return false;
+
+		head.setNext(node);
+		size++;
+		return true;
 	}
 
 	@Override
@@ -33,7 +41,7 @@ public class LinkedQueue<E> extends LinkedStruct<E, LinkedNode<E>> implements Qu
 	public E remove() {
 		if(isEmpty())
 		{
-			throw new EmptyListException();
+			throw new EmptyListException("The list is empty.");
 		}else
 		{
 			LinkedNode<E> node = head.getNext();

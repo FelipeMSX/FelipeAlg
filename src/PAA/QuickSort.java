@@ -4,11 +4,7 @@ package PAA;
  * Created by Felipe on 04/05/2015.
  */
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 
 
 public class QuickSort {

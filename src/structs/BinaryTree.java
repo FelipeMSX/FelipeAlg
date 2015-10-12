@@ -218,6 +218,7 @@ public class BinaryTree<E extends Comparable<E>> extends Tree<E, TreeNode_Binary
     }
 
     @Override
+    //Último mais à direita.
     public E getLast()
     {
         if(isEmpty())

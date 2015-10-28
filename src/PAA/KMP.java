@@ -8,11 +8,11 @@ import java.io.*;
 public class KMP {
 	//https://en.wikibooks.org/wiki/Algorithm_Implementation/String_searching/Knuth-Morris-Pratt_pattern_matcher#C_and_Java
 
-	static int validGeneCountMin;                       //Tamanho mï¿½nimo para uma sequï¿½ncia ser considerada vï¿½lida.
-	static String geneticSequence;                      // A sequï¿½ncia genï¿½tica que serï¿½ usada para encontrar os padrï¿½es das doenï¿½as.
-	static int diseaseCount;                            // Total de doenï¿½as.
-	static FileData[] Diseases;                         // Armazena o total de doenï¿½as ï¿½ pesquisar.
-	static StringBuilder steps = new StringBuilder();   // Armazena toda os passos que serï¿½o gravados no arquivo de saï¿½da.
+	static int validGeneCountMin;                       //Tamanho mínimo para uma sequência ser considerada válida.
+	static String geneticSequence;                      // A sequência genética que será usada para encontrar os padrões das doenças.
+	static int diseaseCount;                            // Total de doenças.
+	static FileData[] Diseases;                         // Armazena o total de doenças à pesquisar.
+	static StringBuilder steps = new StringBuilder();   // Armazena toda os passos que serão gravados no arquivo de saída.
 	public static void main(String args[]) throws IOException
 	{
 		if(args.length !=0) {
@@ -90,7 +90,7 @@ public class KMP {
 			BufferedReader br = new BufferedReader(fr);
 			try
 			{
-				//Lï¿½ os contï¿½iners cadastrados
+				//L? os cont?iners cadastrados
 				validGeneCountMin   = Integer.parseInt(br.readLine());
 				geneticSequence     = br.readLine();
 				diseaseCount        = Integer.parseInt(br.readLine());
@@ -132,7 +132,7 @@ public class KMP {
 
 	private static class KMPTable {
 		public String charSequence;
-		public int bigPS[]; //Maior prefixo que tambï¿½m ï¿½ sufixo;
+		public int bigPS[]; //Maior prefixo que tamb?m ? sufixo;
 
 		public KMPTable(String charSequence){
 			this.charSequence = charSequence;

@@ -18,11 +18,11 @@ public class KMP {
 		if(args.length !=0) {
 			readInputFile(args[0]);
 			runKMP();
-
 			writeSteps(args[0]);
 		}
 
-	KMPTable table = calcTableKMP("aracaju");
+
+	KMPTable table = calcTableKMP("ara");
 	int x = 0;
 		System.out.println(table);
 
@@ -46,10 +46,8 @@ public class KMP {
 			} else // (pat[i] != pat[len])
 			{
 				if (len != 0) {
-					// This is tricky. Consider the example AAACAAAA and i = 7.
 					len = table.bigPS[len - 1];
 
-					// Also, note that we do not increment i here
 				} else // if (len == 0)
 				{
 					table.bigPS[i] = 0;
@@ -57,6 +55,9 @@ public class KMP {
 				}
 			}
 		}
+
+		for(int k = 0; k < m; k++)
+            table.bigPS[k] =  table.bigPS[k]-1;
 		return table;
 	}
 

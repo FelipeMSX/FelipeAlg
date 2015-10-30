@@ -23,7 +23,8 @@ public class KMP {
 //			writeSteps(args[0]);
 //		}
 		validGeneCountMin = 3;
-		KMPTable table =  calcTableKMP("AATAAT");
+		KMPTable table =  calcTableKMP("AACCGGTT");
+		lastPositionValid = 0;
 		int qtdMatched = searchKMP("AAAATTTCGTTAAATTTGAACATAGGGATA",table);
 		System.out.println(qtdMatched);
 	}
@@ -80,6 +81,56 @@ public class KMP {
 		int textLength = text.length();
 		int	tableLength = table.charSequence.length();
 
+		int tempGenCount = 0;
+		//Texto menor que o padrão
+		if(tableLength > textLength)
+			return -1;
+
+		StringBuilder sTeste = new StringBuilder();
+		while(textP != textLength)
+		{
+			sTeste.append(text.charAt(textP));
+			if(text.charAt(textP) == table.charSequence.charAt(tableP+1)) {
+				tableP++;
+				tempGenCount++;
+
+				//FullMatch
+				if(tableP+1 == tableLength)
+				{
+					if(tempGenCount >= validGeneCountMin) {
+						lastPositionValid += tempGenCount;
+					}
+					return lastPositionValid;
+				}
+
+			}else{
+				if(tempGenCount >= validGeneCountMin) {
+					lastPositionValid += tempGenCount;
+					String d = table.charSequence.substring(tempGenCount,tableLength);
+					KMPTable kTable =  calcTableKMP(d);
+					return searchKMP(text,kTable);
+
+				}
+
+				//Se for diferente atribuir o valor da tabela calculado correspondente
+				tableP = tableP == -1 ? -1 :table.bigPS[tableP];
+				tempGenCount = tableP != -1 ? tableP+1:0;
+
+			}
+				textP++;
+
+		}
+		return lastPositionValid; //nomatchFound
+	}
+
+/*
+	public static int searchKMP(String text, KMPTable table)
+	{
+		int tableP = -1;//TablePonteiro
+		int textP = 0 ;///TextoPonteiro
+		int textLength = text.length();
+		int	tableLength = table.charSequence.length();
+
 		lastPositionValid = -1;
 		int tempGenCount = 0;
 		//Texto menor que o padrão
@@ -123,16 +174,16 @@ public class KMP {
 
 				int calc = lastPositionValid;
 				while(calc < tableP) {
-				calc++;
-						tempGenCount++;
+					calc++;
+					tempGenCount++;
 				}
 			}
-				textP++;
+			textP++;
 
 		}
 		return ++lastPositionValid; //nomatchFound
 	}
-
+*/
 	public static void writeSteps(String filePath) throws IOException
 	{
 		FileWriter fw = new FileWriter( filePath );

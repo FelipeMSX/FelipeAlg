@@ -11,37 +11,43 @@ public class KMP {
 	static int validGeneCountMin;                       //Tamanho mínimo para uma sequência ser considerada válida.
 	static String geneticSequence;                      // A sequência genética que será usada para encontrar os padrões das doenças.
 	static int diseaseCount;                            // Total de doenças.
-	static FileData[] Diseases;                         // Armazena o total de doenças à pesquisar.
+	static FileData[] Diseases;							// Armazena o total de doenças à pesquisar.
+	static FileData[] sortedDiseases;
 	static StringBuilder steps = new StringBuilder();   // Armazena toda os passos que serão gravados no arquivo de saída.
 	static int lastPositionValid;
 
 	public static void main(String args[]) throws IOException
 	{
-//		if(args.length !=0) {
-//			readInputFile(args[0]);
-//			runKMP();
-//			writeSteps(args[0]);
-//		}
-		validGeneCountMin = 3;
-		KMPTable table =  calcTableKMP("AACCGGTT");
-		lastPositionValid = 0;
-		int qtdMatched = searchKMP("AAAATTTCGTTAAATTTGAACATAGGGATA",table);
-		System.out.println(qtdMatched);
+		if(args.length !=0) {
+			readInputFile(args[0]);
+			runKMP();
+			sortDiseases(Diseases);
+			createSteps();
+			writeSteps(args[1]);
+		}
 	}
 
 	public static void runKMP()
 	{
-		int diseaseCount = 0;
-		while(Diseases.length != diseaseCount)
+		for(int k = 0; k < Diseases.length;k++)
 		{
-			FileData disease = Diseases[diseaseCount];
-
-			//Para cada gene fazer a pesquisa na sequência genética inteira.
+			FileData disease = Diseases[k];
+			//Para cada doença fazer a pesquisa na sequência genética inteira.
+			int acceptableMatch = 0;
 			for(int i = 0; i < disease.gene.length; i++)
 			{
-				calcTableKMP(disease.gene[i]);
+				lastPositionValid 	= 0;
+				KMPTable kTable		=  calcTableKMP(disease.gene[i]);
+				int qtdMatched 		= searchKMP(geneticSequence, kTable);
+				double percentage 	= (double)qtdMatched/(double)kTable.charSequence.length();
+
+				if(percentage >= 0.9d)
+				{
+					acceptableMatch++;
+				}
 			}
-			diseaseCount++;
+			//Cálcula o o total de porcengatem de acordo com a quantidade de genes aceitáveis com o total, fórmula: aceitaveis/total;
+			disease.percentageMatched = (byte)Math.round(((double)acceptableMatch /(double) disease.gene.length)*100);
 		}
 	}
 
@@ -76,12 +82,12 @@ public class KMP {
 	//retorna a posição da ocorrência do primeiro match no texto;
 	public static int searchKMP(String text, KMPTable table)
 	{
-		int tableP = -1;//TablePonteiro
-		int textP = 0 ;///TextoPonteiro
-		int textLength = text.length();
-		int	tableLength = table.charSequence.length();
-
-		int tempGenCount = 0;
+		int tableP 			= -1;//TablePonteiro
+		int textP 			= 0 ;//TextoPonteiro
+		int textLength 		= text.length();
+		int	tableLength 	= table.charSequence.length();
+		lastPositionValid 	= 0;
+		int tempGenCount 	= 0;
 		//Texto menor que o padrão
 		if(tableLength > textLength)
 			return -1;
@@ -93,7 +99,7 @@ public class KMP {
 			if(text.charAt(textP) == table.charSequence.charAt(tableP+1)) {
 				tableP++;
 				tempGenCount++;
-
+                textP++;
 				//FullMatch
 				if(tableP+1 == tableLength)
 				{
@@ -102,88 +108,91 @@ public class KMP {
 					}
 					return lastPositionValid;
 				}
-
 			}else{
 				if(tempGenCount >= validGeneCountMin) {
 					lastPositionValid += tempGenCount;
 					String d = table.charSequence.substring(tempGenCount,tableLength);
-					KMPTable kTable =  calcTableKMP(d);
-					return searchKMP(text,kTable);
 
-				}
+					//Se não possuir  quantidade mínima de caracteres encerrar.
+					if(d.length() < validGeneCountMin)
+						return lastPositionValid;
 
-				//Se for diferente atribuir o valor da tabela calculado correspondente
-				tableP = tableP == -1 ? -1 :table.bigPS[tableP];
-				tempGenCount = tableP != -1 ? tableP+1:0;
-
+					table 			=  calcTableKMP(d);
+                    tableLength 	= table.bigPS.length;
+					tableP 			= -1;
+					tempGenCount	= 0;
+                    textP++;
+				}else {
+					//Se for diferente atribuir o valor da tabela calculado correspondente
+                    tableP = tableP == -1 ? -1 :table.bigPS[tableP];
+					tempGenCount = tableP != -1 ? tableP + 1 : 0;
+                    if(tableP == -1 )
+                        textP++;
+                }
 			}
-				textP++;
-
 		}
-		return lastPositionValid; //nomatchFound
+		return lastPositionValid;
 	}
 
-/*
-	public static int searchKMP(String text, KMPTable table)
+	//Ordena usando o mergesort as doenças;
+	public static void sortDiseases(FileData[] diseases)
 	{
-		int tableP = -1;//TablePonteiro
-		int textP = 0 ;///TextoPonteiro
-		int textLength = text.length();
-		int	tableLength = table.charSequence.length();
-
-		lastPositionValid = -1;
-		int tempGenCount = 0;
-		//Texto menor que o padrão
-		if(tableLength > textLength)
-			return -1;
-
-		StringBuilder sTeste = new StringBuilder();
-		while(textP != textLength)
-		{
-			sTeste.append(text.charAt(textP));
-			if(text.charAt(textP) == table.charSequence.charAt(tableP+1)) {
-				tableP++;
-				tempGenCount++;
-
-				//FullMatch
-				if(tableP+1 == tableLength)
-				{
-					if(tempGenCount >= validGeneCountMin) {
-						lastPositionValid = tableP;
-					}
-					return ++lastPositionValid;
-				}
-
-			}else{
-				if(tempGenCount >= validGeneCountMin) {
-					lastPositionValid = tableP;
-					int t = (tableLength - (tableP+1));
-					//CanBreak
-					if( (tableLength - (tableP+1)) < validGeneCountMin)
-					{
-						return ++lastPositionValid;
-					}
-				}
-				tempGenCount = 0;
-				//Se for diferente atribuir o valor da tabela calculado correspondente
-				tableP = tableP == -1 ? -1 :table.bigPS[tableP];
-
-				//Corrigir caso fique antes do lastPositionValid
-				if(tableP < lastPositionValid)
-					tableP = lastPositionValid;
-
-				int calc = lastPositionValid;
-				while(calc < tableP) {
-					calc++;
-					tempGenCount++;
-				}
-			}
-			textP++;
-
-		}
-		return ++lastPositionValid; //nomatchFound
+		mergesort(diseases);
 	}
-*/
+
+	//Prepara a função antes de ser chamada
+	public static void mergesort(FileData input[]){
+		sortedDiseases = new FileData[diseaseCount];
+		merge(input, 0, diseaseCount -1);
+	}
+
+	private static void merge(FileData input[], int ini, int end) {
+		if(ini < end) {
+			int middle = ini + (end - ini) / 2;
+			merge(input, ini, middle);
+			merge(input, middle + 1, end);
+			intercalate(input, ini, middle, end);
+		}
+	}
+
+	private static void intercalate(FileData input[], int init, int middle, int end) {
+		int i = init;
+		int j = middle+1;
+		int k = init; // controlador do vetor output, a cada adição no vetor, é incrementado
+
+		while (i <= middle || j <= end ) {
+
+			// Se já passou do fim, significa que não possui mais elementos do meio pro fim para inserir no vetor
+			if(j > end) {
+				sortedDiseases[k++] = input[i++];
+			}
+			// Se i > meio, significa que não existe mais elementos do inicio ao fim para comparar, agora é só adicioar do meio +1 ao fim.
+			else if(i > middle) {
+				sortedDiseases[k++] = input[j++];
+			}
+			else if(input[i].percentageMatched >= input[j].percentageMatched) {
+				sortedDiseases[k++] = input[i++];
+			}else {
+				sortedDiseases[k++] = input[j++];
+			}
+		}
+		//Copiar os elementos para o vetor entrada
+		for(int w = init ; w <= end; w++){
+			input[w] = sortedDiseases[w];
+		}
+
+	}
+
+    public static void createSteps()
+    {
+        int qtd = sortedDiseases.length -1;
+        for(int i = 0; i < qtd; i++)
+        {
+            steps.append(sortedDiseases[i].diseaseName+": " +sortedDiseases[i].percentageMatched + "%\n");
+        }
+        steps.append(sortedDiseases[qtd].diseaseName+": " +sortedDiseases[qtd].percentageMatched + "%");
+    }
+
 	public static void writeSteps(String filePath) throws IOException
 	{
 		FileWriter fw = new FileWriter( filePath );
@@ -193,7 +202,7 @@ public class KMP {
 
 	public static String formatOutput(String disease, int percentage)
 	{
-		// String.format("%s: %d%%","H1Z1",123));
+		//String.format("%s: %d%%","H1Z1",123));
 		return disease+": "+percentage+'%';
 	}
 
@@ -201,36 +210,32 @@ public class KMP {
 	{
 		// Contem o caminho do arquivo
 		FileReader fr = new FileReader(filePath);
-
-		if (fr != null)
+		BufferedReader br = new BufferedReader(fr);
+		try
 		{
-			BufferedReader br = new BufferedReader(fr);
-			try
+			//L? os cont?iners cadastrados
+			validGeneCountMin   = Integer.parseInt(br.readLine());
+			geneticSequence     = br.readLine();
+			diseaseCount        = Integer.parseInt(br.readLine());
+			Diseases 			= new FileData[diseaseCount];
+			int count = 0;
+			while (br.ready())
 			{
-				//L? os cont?iners cadastrados
-				validGeneCountMin   = Integer.parseInt(br.readLine());
-				geneticSequence     = br.readLine();
-				diseaseCount        = Integer.parseInt(br.readLine());
-				Diseases = new FileData[diseaseCount];
-				int count = 0;
-				while (br.ready())
-				{
-					Diseases[count] = examineLine(br.readLine());
-					count++;
-				}
-
-				br.close();
-				fr.close();
-			} catch (IOException e) {
-				e.printStackTrace();
+				Diseases[count] = examineLine(br.readLine());
+				count++;
 			}
+
+			br.close();
+			fr.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
 	public static FileData examineLine(String line){
 		FileData data 		= new FileData();
 		String[] analise 	= line.split(" ");
-		data.diseaseName 			= analise[0];
+		data.diseaseName 	= analise[0];
 
 		data.gene = new String[Integer.parseInt(analise[1])];
 		for (int i = 0; i < data.gene.length; i ++)
@@ -245,6 +250,7 @@ public class KMP {
 	private static class FileData {
 		public String diseaseName;
 		public String[] gene;
+		public byte percentageMatched;
 	}
 
 	private static class KMPTable {
@@ -254,16 +260,6 @@ public class KMP {
 		public KMPTable(String charSequence){
 			this.charSequence = charSequence;
 			this.bigPS = new int[charSequence.length()];
-		}
-
-		@Override
-		public String toString()
-		{
-			String s = "";
-			for(int i = 0; i < bigPS.length; i++)
-				s+= bigPS[i]+" ";
-
-			return s;
 		}
 	}
 

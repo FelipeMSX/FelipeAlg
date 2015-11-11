@@ -1,52 +1,61 @@
 package util;
 
-public class ElapsedTime {
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Spliterator;
+
+public class ElapsedTime implements Iterable<Double> {
 	private long initTime;
-	private long finalTime;
+	private ArrayList<Double> times;
 	
 	public ElapsedTime() {
 		this.initTime = System.nanoTime();
-		this.finalTime = 0;
 	}
 	
 	public double calculateElapsedTimeInSeconds(){
-		double temp = this.finalTime;
+		double temp = System.nanoTime();
 		temp -= this.initTime;
-		temp = temp/1000000000;
+		temp = temp/1000000000d;
+		times.add(temp);
 		return temp;
 	}
 	
 	public double calculateElapsedTimeInMilliSeconds(){
-		double temp = this.finalTime;
+		double temp = System.nanoTime();
 		temp -= this.initTime;
-		temp = temp/1000000;
+		temp = temp/1000000d;
+		times.add(temp);
 		return temp;
 	}
 	
 	public double calculateElapsedTimeInMicroSeconds(){
-		double temp = this.finalTime;
+		double temp = System.nanoTime();
 		temp -= this.initTime;
-		temp = temp/1000;
+		temp = temp/1000d;
+		times.add(temp);
 		return temp;
 	}
 
 	public double calculateElapsedTimeInNano(){
-		double temp = this.finalTime;
+		double temp = System.nanoTime();
 		temp -= this.initTime;
+		times.add(temp);
 		return temp;
 	}
 
-	public long getFinalTime() {
-		return finalTime;
-	}
 
-	public void setFinalTime() {
-		this.finalTime = System.nanoTime();
-	}
-	
 	public void reset(){
 		initTime = 0;
-		finalTime = 0;
 	}
-	
+
+	@Override
+	public Iterator<Double> iterator() {
+		return null;
+	}
+
+
+	@Override
+	public Spliterator<Double> spliterator() {
+		return null;
+	}
 }

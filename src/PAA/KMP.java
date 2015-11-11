@@ -42,9 +42,8 @@ public class KMP {
 				double percentage 	= (double)qtdMatched/(double)kTable.charSequence.length();
 
 				if(percentage >= 0.9d)
-				{
 					acceptableMatch++;
-				}
+
 			}
 			//Cálcula o o total de porcengatem de acordo com a quantidade de genes aceitáveis com o total, fórmula: aceitaveis/total;
 			disease.percentageMatched = (byte)Math.round(((double)acceptableMatch /(double) disease.gene.length)*100);
@@ -65,9 +64,7 @@ public class KMP {
 			{
 				if (len != 0) {
 					len = table.bigPS[len - 1];
-
-				} else // if (len == 0)
-				{
+				} else {
 					table.bigPS[i] = 0;
 					i++;
 				}
@@ -163,51 +160,36 @@ public class KMP {
 		while (i <= middle || j <= end ) {
 
 			// Se já passou do fim, significa que não possui mais elementos do meio pro fim para inserir no vetor
-			if(j > end) {
+			if(j > end)
 				sortedDiseases[k++] = input[i++];
-			}
 			// Se i > meio, significa que não existe mais elementos do inicio ao fim para comparar, agora é só adicioar do meio +1 ao fim.
-			else if(i > middle) {
+			else if(i > middle)
 				sortedDiseases[k++] = input[j++];
-			}
-			else if(input[i].percentageMatched >= input[j].percentageMatched) {
+			else if(input[i].percentageMatched >= input[j].percentageMatched)
 				sortedDiseases[k++] = input[i++];
-			}else {
+			else
 				sortedDiseases[k++] = input[j++];
-			}
 		}
 		//Copiar os elementos para o vetor entrada
-		for(int w = init ; w <= end; w++){
+		for(int w = init ; w <= end; w++)
 			input[w] = sortedDiseases[w];
-		}
-
 	}
 
-    public static void createSteps()
-    {
+    public static void createSteps() {
         int qtd = sortedDiseases.length -1;
         for(int i = 0; i < qtd; i++)
-        {
             steps.append(sortedDiseases[i].diseaseName+": " +sortedDiseases[i].percentageMatched + "%\n");
-        }
+
         steps.append(sortedDiseases[qtd].diseaseName+": " +sortedDiseases[qtd].percentageMatched + "%");
     }
 
-	public static void writeSteps(String filePath) throws IOException
-	{
+	public static void writeSteps(String filePath) throws IOException {
 		FileWriter fw = new FileWriter( filePath );
 		fw.write(steps.toString());
 		fw.close();
 	}
 
-	public static String formatOutput(String disease, int percentage)
-	{
-		//String.format("%s: %d%%","H1Z1",123));
-		return disease+": "+percentage+'%';
-	}
-
-	public static void readInputFile(String filePath) throws FileNotFoundException
-	{
+	public static void readInputFile(String filePath) throws FileNotFoundException {
 		// Contem o caminho do arquivo
 		FileReader fr = new FileReader(filePath);
 		BufferedReader br = new BufferedReader(fr);
@@ -232,16 +214,14 @@ public class KMP {
 		}
 	}
 
-	public static FileData examineLine(String line){
+	public static FileData examineLine(String line) {
 		FileData data 		= new FileData();
 		String[] analise 	= line.split(" ");
 		data.diseaseName 	= analise[0];
 
 		data.gene = new String[Integer.parseInt(analise[1])];
 		for (int i = 0; i < data.gene.length; i ++)
-		{
 			data.gene[i] = analise[i+2];
-		}
 
 		return data;
 	}

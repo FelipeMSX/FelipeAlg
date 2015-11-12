@@ -4,7 +4,6 @@ import _abstract.LinkedStruct;
 import _interfaces.Queue_Stacks;
 import exception.EmptyListException;
 import nodes.LinkedNode;
-
 /**
  * Created by Felipe on 06/10/2015.
  */

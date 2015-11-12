@@ -6,7 +6,6 @@ import java.io.*;
  * Created by Felipe Morais on 26/10/2015.
  */
 public class KMP {
-	//https://en.wikibooks.org/wiki/Algorithm_Implementation/String_searching/Knuth-Morris-Pratt_pattern_matcher#C_and_Java
 
 	static int validGeneCountMin;                       //Tamanho mínimo para uma sequência ser considerada válida.
 	static String geneticSequence;                      // A sequência genética que será usada para encontrar os padrões das doenças.

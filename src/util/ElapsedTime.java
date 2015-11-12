@@ -17,6 +17,7 @@ public class ElapsedTime implements Iterable<Double> {
 		temp -= this.initTime;
 		temp = temp/1000000000d;
 		times.add(temp);
+		this.initTime = System.nanoTime();
 		return temp;
 	}
 	
@@ -25,6 +26,7 @@ public class ElapsedTime implements Iterable<Double> {
 		temp -= this.initTime;
 		temp = temp/1000000d;
 		times.add(temp);
+		this.initTime = System.nanoTime();
 		return temp;
 	}
 	
@@ -33,6 +35,7 @@ public class ElapsedTime implements Iterable<Double> {
 		temp -= this.initTime;
 		temp = temp/1000d;
 		times.add(temp);
+		this.initTime = System.nanoTime();
 		return temp;
 	}
 
@@ -40,6 +43,7 @@ public class ElapsedTime implements Iterable<Double> {
 		double temp = System.nanoTime();
 		temp -= this.initTime;
 		times.add(temp);
+		this.initTime = System.nanoTime();
 		return temp;
 	}
 
@@ -50,12 +54,8 @@ public class ElapsedTime implements Iterable<Double> {
 
 	@Override
 	public Iterator<Double> iterator() {
-		return null;
+		return times.iterator();
 	}
 
 
-	@Override
-	public Spliterator<Double> spliterator() {
-		return null;
-	}
 }

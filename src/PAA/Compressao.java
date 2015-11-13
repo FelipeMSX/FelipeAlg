@@ -5,7 +5,7 @@ import java.io.*;
 
 
 /**
- * Created by Felipe Morais on 26/10/2015.
+ * Created by Felipe Morais on 05/11/2015.
  */
 public class Compressao {
 

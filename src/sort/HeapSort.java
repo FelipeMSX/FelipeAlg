@@ -15,7 +15,7 @@ public class HeapSort<E extends Comparable<E>> {
     }
 
     private void heapsort(E input[], int n){
-        buildMaxHeap(input,n);
+        buildMinHeap(input, n);
         int i;
         for(i = n - 1; i > 0; i--){
             swapItem(input,0,i);
@@ -40,7 +40,7 @@ public class HeapSort<E extends Comparable<E>> {
         }
     }
 
-    private void buildMaxHeap(E input[], int n) {
+    private void buildMinHeap(E input[], int n) {
         for (int i = n/2 - 1; i >= 0; i--)
             minHeapify(input, i, n);
     }

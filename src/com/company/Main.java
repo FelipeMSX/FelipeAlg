@@ -4,6 +4,7 @@ package com.company;
 import PAA.KMP;
 import _abstract.Tree;
 import sort.HeapSort;
+import sort.MergeSort;
 import structs.LinkedQueue;
 import util.ElapsedTime;
 
@@ -16,9 +17,9 @@ public class Main {
     public static void main(String[] args) {
 	// write your code here
         System.out.println("HelloGitHub");
-        HeapSort heap = new HeapSort();
-        Short teste[] = {34,1,42,0,13,20,11,-1,0,203,100};
-        heap.heapsort(teste);
+        Short teste[] = {34,1,42,0,13,2,11,-1,0,203,100};
+        MergeSort<Short> ms = new MergeSort();
+        ms.merge(teste);
         System.out.printf("");
     }
 

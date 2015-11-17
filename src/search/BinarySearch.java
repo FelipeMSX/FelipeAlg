@@ -25,27 +25,6 @@ public class BinarySearch<E extends Comparable<E>> {
 		return null;
 	}
 
-	public E binarySearchRecursive(E[] array, E item){
-		return binaryAuxiliator(0, array.length-1, item, array);
-	}
-	
-	private E binaryAuxiliator(int left, int right, E item, E array[]){
-		if (left > right)
-			return null;
-		else {
-			// calculate midpoint to cut set in half
-			int mid = midvalue(left, right);
-			// arrayItem < item
-			if (array[mid].compareTo(item) <= -1)
-				return binaryAuxiliator(mid + 1, right, item, array);
-			else
-			// arrayItem > item
-			if (array[mid].compareTo(item) >= 1)
-				return binaryAuxiliator(left, mid - 1, item, array);
-			else
-				return array[mid];
-		}
-	}
 	private int midvalue(int left, int right)
 	{
 		return left +(right - left)/2;

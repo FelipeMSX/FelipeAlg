@@ -22,12 +22,10 @@ public class Compressao {
 			createSteps();
 			writeSteps(args[1]);
 		}
-
-		System.out.println();
 	}
 
 	public static void runCompressor(){
-		int i = 0;
+		int i = 1;
 		while(i < TOTAL) {
 			RLE_Auxiliary = 0;
 			//System.out.println(RunLengthEncoding(inputValues[i].decodeValue));
@@ -59,7 +57,7 @@ public class Compressao {
 
 	public static String Huffman(short input[])
 	{
-		StringBuilder result = new StringBuilder();
+		//StringBuilder result = new StringBuilder();
 		//Montar histograma
 		short[] countInput = CountInput(input);
 		PriorityQueue priorityQueue = new PriorityQueue(40);
@@ -78,13 +76,23 @@ public class Compressao {
 
 
 		//Montar Tabela
-
+		createHuffmanTable(BiTree);
 		//Compressão
 		return null;
 	}
 
-	public static short[] CountInput(short input[])
-	{
+
+	public static void createHuffmanTable(BinaryTree biTree) {
+		//Encontrar todos os nós folhas;
+      //  StringBuilder nodeValue =  new StringBuilder();
+        BinaryTree root = biTree;
+        BinaryTree left = biTree.left;
+        while(left != root){
+
+        }
+
+	}
+	public static short[] CountInput(short input[]) {
 		int size = input.length;
 		short[] countInput = new short[255];
 		for(int i =0; i < size;i++)
@@ -93,8 +101,7 @@ public class Compressao {
 		return countInput;
 	}
 
-	private static BinaryTree createTree(PriorityQueue priorityQueue)
-	{
+	private static BinaryTree createTree(PriorityQueue priorityQueue) {
 		while(priorityQueue.size != 1)
 		{
 			BinaryTree nodeLeft = priorityQueue.remove();
@@ -104,6 +111,7 @@ public class Compressao {
 			nodeFather.freq = nodeLeft.freq + nodeRight.freq;
 			nodeFather.left = nodeLeft;
 			nodeFather.right = nodeRight;
+			priorityQueue.insert(nodeFather);
 		}
 		return priorityQueue.remove();
 	}
@@ -222,6 +230,19 @@ public class Compressao {
 		short simb;
 		BinaryTree right;
 		BinaryTree left;
+
+
+		boolean isLeaf() {
+			return right == null && left == null;
+		}
+	}
+
+
+	//Table de Compressão de Huffman
+	public static class HTable
+	{
+		short symbol;
+		short compressCode;
 	}
 
 }

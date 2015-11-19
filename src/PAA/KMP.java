@@ -70,6 +70,8 @@ public class KMP {
 
 		for(int k = 0; k < m; k++)
             table.bigPS[k] =  table.bigPS[k]-1;
+
+
 		return table;
 	}
 

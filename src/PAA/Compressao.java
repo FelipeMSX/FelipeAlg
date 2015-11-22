@@ -40,7 +40,7 @@ public class Compressao {
 			Huffman(inputValues[i].decodeValue);
 		//	System.out.println((double)RLE_Auxiliary/(double)inputValues[i].decodeValue.length);
 
-			//RLEtoOutput(result,inputValues[i].decodeValue.length, RLE_Auxiliary);
+			RLEtoOutput(result,inputValues[i].decodeValue.length, RLE_Auxiliary);
 			inputValues[i].decodeValue = null;
 			i++;
 		}
@@ -52,27 +52,26 @@ public class Compressao {
 		//Calcular porcentagem
 
 		double RLE = (double)resultSize/(double)originalSize*100;
+		if(RLE < 100d) {
+			steps.append("[RLE " + String.format("%.2f", RLE).replace(',', '.') + "%] ");
 
-		steps.append("[RLE "+ String.format("%.2f",RLE) + "%] ");
+			for (int i = 0; i < size; i++) {
+				String hex = Integer.toHexString(result[i]).toUpperCase();
+				if (hex.length() == 1) {
+					steps.append("0x0" + hex + " ");
 
-		for(int i = 0; i < size;i++ )
-		{
-			String hex = Integer.toHexString(result[i]).toUpperCase();
-			if(hex.length() ==1) {
-				steps.append("0x0"+hex+" ");
+				} else {
+					steps.append("0x" + hex + " ");
+				}
+			}
+			String hex = Integer.toHexString(result[result.length - 1]).toUpperCase();
+			if (hex.length() == 1) {
+				steps.append("0x0" + hex + "\n");
 
-			}else{
-				steps.append("0x"+hex+" ");
+			} else {
+				steps.append("0x" + hex + "\n");
 			}
 		}
-		String hex = Integer.toHexString(result[result.length-1]).toUpperCase();
-		if(hex.length() ==1) {
-			steps.append("0x0"+hex+"\n");
-
-		}else{
-			steps.append("0x"+hex+"\n");
-		}
-
 	}
 	public static short[] RunLengthEncoding(short[] input)
 	{
@@ -115,12 +114,12 @@ public class Compressao {
 		BinaryTree BiTree = createTree(priorityQueue);
 
 		//Montar Tabela
-		TableCod[] tc = createTableToCompress(BiTree);
+	//	TableCod[] tc = createTableToCompress(BiTree);
 
 		//Compressão
-		StringBuilder result = compress(tc,input);
+		//StringBuilder result = compress(tc,input);
 
-		return result;
+		return null;
 	}
 
 	public static short[] CountInput(short input[])

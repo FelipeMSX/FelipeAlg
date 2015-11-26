@@ -19,7 +19,7 @@ public class Compressao {
 	static int TOTAL;
 
 	public static void main(String args[]) throws IOException {
-		ElapsedTime et = new ElapsedTime();
+
 		if(args.length !=0) {
 			readInputFile(args[0]);
 			runCompressor();
@@ -27,23 +27,25 @@ public class Compressao {
 			writeSteps(args[1]);
 		}
 
-		System.out.println(et.calculateElapsedTimeInMilliSeconds());
 	}
 
 	public static void runCompressor(){
 		int i = 0;
+		ElapsedTime et = new ElapsedTime();
 		steps = new StringBuilder();
 		while(i < TOTAL) {
 			RLE_Auxiliary = 0;
 			Huffman_Auxiliary = 0;
 			short[] result = RunLengthEncoding(inputValues[i].decodeValue);
-			Huffman(inputValues[i].decodeValue);
+		//	Huffman(inputValues[i].decodeValue);
 		//	System.out.println((double)RLE_Auxiliary/(double)inputValues[i].decodeValue.length);
 
-			RLEtoOutput(result,inputValues[i].decodeValue.length, RLE_Auxiliary);
+			//RLEtoOutput(result,inputValues[i].decodeValue.length, RLE_Auxiliary);
 			inputValues[i].decodeValue = null;
 			i++;
 		}
+
+		System.out.println("RLE:" +et.calculateElapsedTimeInMilliSeconds());
 	}
 
 	public static void RLEtoOutput(short[] result,int originalSize, int resultSize )
@@ -52,26 +54,26 @@ public class Compressao {
 		//Calcular porcentagem
 
 		double RLE = (double)resultSize/(double)originalSize*100;
-		if(RLE < 100d) {
+
 			steps.append("[RLE " + String.format("%.2f", RLE).replace(',', '.') + "%] ");
 
-			for (int i = 0; i < size; i++) {
-				String hex = Integer.toHexString(result[i]).toUpperCase();
-				if (hex.length() == 1) {
-					steps.append("0x0" + hex + " ");
-
-				} else {
-					steps.append("0x" + hex + " ");
-				}
-			}
-			String hex = Integer.toHexString(result[result.length - 1]).toUpperCase();
+		for (int i = 0; i < size; i++) {
+			String hex = Integer.toHexString(result[i]).toUpperCase();
 			if (hex.length() == 1) {
-				steps.append("0x0" + hex + "\n");
+				steps.append("0x0" + hex + " ");
 
 			} else {
-				steps.append("0x" + hex + "\n");
+				steps.append("0x" + hex + " ");
 			}
 		}
+		String hex = Integer.toHexString(result[result.length - 1]).toUpperCase();
+		if (hex.length() == 1) {
+			steps.append("0x0" + hex + "\n");
+
+		} else {
+			steps.append("0x" + hex + "\n");
+		}
+
 	}
 	public static short[] RunLengthEncoding(short[] input)
 	{
@@ -187,6 +189,7 @@ public class Compressao {
 	public static void readInputFile(String filePath) throws FileNotFoundException
 	{
 		// Contem o caminho do arquivo
+		ElapsedTime et = new ElapsedTime();
 		FileReader fr = new FileReader(filePath);
 		BufferedReader br = new BufferedReader(fr);
 		try
@@ -205,17 +208,22 @@ public class Compressao {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+		System.out.println("Ler Arquivo:"+et.calculateElapsedTimeInMilliSeconds());
 	}
 
 	public static FileData examineLine(String line){
 		FileData data 		= new FileData();
-		String[] analise 	= line.split(" ");
-		data.decodeValue    = new short[(Short.parseShort(analise[0]))];
-		for (int i = 0; i < data.decodeValue.length; i ++)
-		{
-			data.decodeValue[i] = Short.decode(analise[i+1]);
-		}
+		int count = line.indexOf(" ");
 
+		int len = Integer.parseInt(line.substring(0,count));
+		data.decodeValue = new short[len];
+		int cursor = count+1;//Posição inicial;
+		for(int i = 0; i < len; i++){
+
+			data.decodeValue[i] = Short.decode(line.substring(cursor,cursor+4));
+			cursor+=5;
+		}
 		return data;
 	}
 
@@ -286,4 +294,6 @@ public class Compressao {
 	{
 		String valueCompressed;
 	}
+
+
 }

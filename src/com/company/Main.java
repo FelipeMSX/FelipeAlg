@@ -17,7 +17,7 @@ public class Main {
 
     public static void main(String[] args) {
 	// write your code here
-        String s = String.format("%.2f",20.038d);
+   short s =   Short.decode("xAA");
         System.out.println(s);
     }
 

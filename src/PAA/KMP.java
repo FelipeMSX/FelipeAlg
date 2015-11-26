@@ -70,6 +70,8 @@ public class KMP {
 
 		for(int k = 0; k < m; k++)
             table.bigPS[k] =  table.bigPS[k]-1;
+
+
 		return table;
 	}
 
@@ -117,10 +119,15 @@ public class KMP {
                     textP++;
 				}else {
 					//Se for diferente atribuir o valor da tabela calculado correspondente
-                    tablePos = tablePos == -1 ? -1 :table.bigPS[tablePos];
-					genCount = tablePos != -1 ? tablePos + 1 : 0;
-                    if(tablePos == -1 )
-                        textP++;
+					if(tablePos != -1)
+					{
+						tablePos= table.bigPS[tablePos];
+						genCount = tablePos+1;
+					}else
+					{
+						textP++;
+						genCount = 0;
+					}
                 }
 			}
 		}

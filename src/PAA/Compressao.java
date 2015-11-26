@@ -1,6 +1,8 @@
 package PAA;
 
 
+import util.ElapsedTime;
+
 import java.io.*;
 
 
@@ -13,33 +15,69 @@ public class Compressao {
 	static StringBuilder steps = new StringBuilder();   // Armazena toda os passos que serão gravados no arquivo de saída.
 	static final short RLE_MAX_COUNT = (short)255;
 	static int RLE_Auxiliary;
+	static int Huffman_Auxiliary;
 	static int TOTAL;
 
 	public static void main(String args[]) throws IOException {
+		ElapsedTime et = new ElapsedTime();
 		if(args.length !=0) {
 			readInputFile(args[0]);
 			runCompressor();
 			createSteps();
 			writeSteps(args[1]);
 		}
+
+		System.out.println(et.calculateElapsedTimeInMilliSeconds());
 	}
 
 	public static void runCompressor(){
-		int i = 1;
+		int i = 0;
+		steps = new StringBuilder();
 		while(i < TOTAL) {
 			RLE_Auxiliary = 0;
-			//System.out.println(RunLengthEncoding(inputValues[i].decodeValue));
-		//	System.out.println((double)RLE_Auxiliary/(double)inputValues[i].decodeValue.length);
+			Huffman_Auxiliary = 0;
+			short[] result = RunLengthEncoding(inputValues[i].decodeValue);
 			Huffman(inputValues[i].decodeValue);
+		//	System.out.println((double)RLE_Auxiliary/(double)inputValues[i].decodeValue.length);
 
+			RLEtoOutput(result,inputValues[i].decodeValue.length, RLE_Auxiliary);
 			inputValues[i].decodeValue = null;
 			i++;
 		}
 	}
 
-	public static String RunLengthEncoding(short[] input)
+	public static void RLEtoOutput(short[] result,int originalSize, int resultSize )
+	{
+		int size = result.length-1;
+		//Calcular porcentagem
+
+		double RLE = (double)resultSize/(double)originalSize*100;
+		if(RLE < 100d) {
+			steps.append("[RLE " + String.format("%.2f", RLE).replace(',', '.') + "%] ");
+
+			for (int i = 0; i < size; i++) {
+				String hex = Integer.toHexString(result[i]).toUpperCase();
+				if (hex.length() == 1) {
+					steps.append("0x0" + hex + " ");
+
+				} else {
+					steps.append("0x" + hex + " ");
+				}
+			}
+			String hex = Integer.toHexString(result[result.length - 1]).toUpperCase();
+			if (hex.length() == 1) {
+				steps.append("0x0" + hex + "\n");
+
+			} else {
+				steps.append("0x" + hex + "\n");
+			}
+		}
+	}
+	public static short[] RunLengthEncoding(short[] input)
 	{
 		int size = input.length;
+		short[] resultInput = new short[input.length*2];
+		int resultCount = 0;
 		StringBuilder result = new StringBuilder();
 		for (int i = 0; i < size; i++) {
 			short runLength = (short)1;
@@ -47,21 +85,22 @@ public class Compressao {
 				runLength++;
 				i++;
 			}
-			result.append(String.format("0x%02X", runLength));
-			result.append(String.format(" 0x%02X ", input[i]));
+
+			resultInput[resultCount++] = runLength;
+			resultInput[resultCount++] = input[i];
+
 			RLE_Auxiliary += 2;
 		}
-		result.deleteCharAt(result.length() - 1);
-		return result.toString();
+		return resultInput;
 	}
 
-	public static String Huffman(short input[])
+	public static StringBuilder Huffman(short input[])
 	{
-		//StringBuilder result = new StringBuilder();
 		//Montar histograma
 		short[] countInput = CountInput(input);
-		PriorityQueue priorityQueue = new PriorityQueue(40);
-		for(short i =0; i < 255 ; i++) {
+
+		PriorityQueue priorityQueue = new PriorityQueue(80);
+		for(short i = 0; i < 255 ; i++) {
 			//Inserir na fila de prioridade mínima
 			if(countInput[i]!= 0) {
 				BinaryTree node = new BinaryTree();
@@ -74,46 +113,57 @@ public class Compressao {
 		//montar árvore
 		BinaryTree BiTree = createTree(priorityQueue);
 
-
 		//Montar Tabela
-		createHuffmanTable(BiTree);
+	//	TableCod[] tc = createTableToCompress(BiTree);
+
 		//Compressão
+		//StringBuilder result = compress(tc,input);
+
 		return null;
 	}
 
-
-	public static void createHuffmanTable(BinaryTree biTree) {
-		//Encontrar todos os nós folhas;
-      //  StringBuilder nodeValue =  new StringBuilder();
-        BinaryTree root = biTree;
-        BinaryTree left = biTree.left;
-        while(left != root){
-
-        }
-
-	}
-	public static short[] CountInput(short input[]) {
+	public static short[] CountInput(short input[])
+	{
 		int size = input.length;
-		short[] countInput = new short[255];
-		for(int i =0; i < size;i++)
-			countInput[input[i]]++  ;
+		short[] countInput = new short[256];
+		for(int i =0; i < size;i++) {
+			countInput[input[i]]++;
+		}
 
 		return countInput;
 	}
 
-	private static BinaryTree createTree(PriorityQueue priorityQueue) {
+	private static BinaryTree createTree(PriorityQueue priorityQueue)
+	{
 		while(priorityQueue.size != 1)
 		{
-			BinaryTree nodeLeft = priorityQueue.remove();
-			BinaryTree nodeRight = priorityQueue.remove();
-			BinaryTree nodeFather = new BinaryTree();
-			nodeFather.simb = TOKEN_NULL;
-			nodeFather.freq = nodeLeft.freq + nodeRight.freq;
-			nodeFather.left = nodeLeft;
-			nodeFather.right = nodeRight;
+			BinaryTree nodeLeft     = priorityQueue.remove();
+			BinaryTree nodeRight    = priorityQueue.remove();
+			BinaryTree nodeFather   = new BinaryTree();
+			nodeFather.simb         = TOKEN_NULL;
+			nodeFather.freq         = nodeLeft.freq + nodeRight.freq;
+			nodeFather.left         = nodeLeft;
+			nodeFather.right        = nodeRight;
 			priorityQueue.insert(nodeFather);
 		}
 		return priorityQueue.remove();
+	}
+
+
+	private static TableCod[] createTableToCompress(BinaryTree biTree)
+	{
+		return null;
+	}
+
+	private static StringBuilder compress(TableCod[] tc,short[] input)
+	{
+		StringBuilder result = new StringBuilder();
+		int size = input.length;
+		for(int i =0; i < size; i ++)
+		{
+			result.append(tc[input[i]].valueCompressed);
+		}
+		return result;
 	}
 
 	public static void createSteps()
@@ -230,19 +280,10 @@ public class Compressao {
 		short simb;
 		BinaryTree right;
 		BinaryTree left;
-
-
-		boolean isLeaf() {
-			return right == null && left == null;
-		}
 	}
 
-
-	//Table de Compressão de Huffman
-	public static class HTable
+	public static class TableCod
 	{
-		short symbol;
-		short compressCode;
+		String valueCompressed;
 	}
-
 }

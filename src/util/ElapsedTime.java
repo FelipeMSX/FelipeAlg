@@ -10,6 +10,7 @@ public class ElapsedTime implements Iterable<Double> {
 	
 	public ElapsedTime() {
 		this.initTime = System.nanoTime();
+		times = new ArrayList<>();
 	}
 	
 	public double calculateElapsedTimeInSeconds(){

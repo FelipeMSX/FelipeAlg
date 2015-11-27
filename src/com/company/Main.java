@@ -17,8 +17,12 @@ public class Main {
 
     public static void main(String[] args) {
 	// write your code here
-   short s =   Short.decode("xAA");
-        System.out.println(s);
+
+       for(int i =0; i <= 255; i ++)
+       {
+           System.out.println("case \""+Integer.toHexString(i).toUpperCase()+"\":\n"+"return "+i+";");
+       }
+      //  System.out.println(s);
     }
 
     public static void a(){}

@@ -30,6 +30,7 @@ public class BackTracking {
             createSteps();
             writeSteps(args[1]);
         }
+        System.out.println("sdf");
     }
 
     public static void runBackTracking(){

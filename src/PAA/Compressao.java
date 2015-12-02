@@ -216,12 +216,12 @@ public class Compressao {
 		FileData data 		= new FileData();
 		int count = line.indexOf(" ");
 
-		int len = Integer.parseInt(line.substring(0,count));
+		int len = Integer.parseInt(line.substring(0, count));
 		data.decodeValue = new short[len];
-		int cursor = count+1;//Posição inicial;
+		int cursor = count+3;//Posição inicial;
 		for(int i = 0; i < len; i++){
-
-		//	data.decodeValue[i] = hexToString(line.substring(cursor,cursor+4));
+			line.substring(cursor,cursor+2);
+		// hexToString();
 			cursor+=5;
 		}
 		return data;
@@ -295,37 +295,37 @@ public class Compressao {
 
 	public static short hexToString(String hex) {
 		switch(hex) {
-			case "0":
+			case "00":
 				return 0;
-			case "1":
+			case "01":
 				return 1;
-			case "2":
+			case "02":
 				return 2;
-			case "3":
+			case "03":
 				return 3;
-			case "4":
+			case "04":
 				return 4;
-			case "5":
+			case "05":
 				return 5;
-			case "6":
+			case "06":
 				return 6;
-			case "7":
+			case "07":
 				return 7;
-			case "8":
+			case "08":
 				return 8;
-			case "9":
+			case "09":
 				return 9;
-			case "A":
+			case "0A":
 				return 10;
-			case "B":
+			case "0B":
 				return 11;
-			case "C":
+			case "0C":
 				return 12;
-			case "D":
+			case "0D":
 				return 13;
-			case "E":
+			case "0E":
 				return 14;
-			case "F":
+			case "0F":
 				return 15;
 			case "10":
 				return 16;

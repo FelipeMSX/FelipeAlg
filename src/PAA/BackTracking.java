@@ -14,12 +14,16 @@ public class BackTracking {
     static final byte LEFT      = 2;
     static final byte BACK      = 3;
     static final byte INVALID   = -1;
+    static final byte CURRENT_LOCATION = 8;
 
-    //Variavéis
-    static short rowsCount          = 0;
-    static short columnsCount       = 0;
-    static short initialPositionX   = 0;
-    static short initialPositionY   = 0;
+    //Variavéis usadas a cada rodada do algoritmo
+    static byte[][] maze = new byte [100][100]; // Não irá ser preciso ficar limpando a matriz toda hora.
+    static byte rowsCount          = 0;
+    static byte columnsCount       = 0;
+    static byte initialPositionX   = 0;
+    static byte initialPositionY   = 0;
+
+    static int numberMaze = 0;
     static StringBuilder steps = new StringBuilder();   // Armazena toda os passos que serão gravados no arquivo de saída.
 
 
@@ -30,7 +34,6 @@ public class BackTracking {
             createSteps();
             writeSteps(args[1]);
         }
-        System.out.println("sdf");
     }
 
     public static void runBackTracking(){
@@ -82,9 +85,30 @@ public class BackTracking {
         BufferedReader br = new BufferedReader(fr);
         try {
 
-            int count = 0;
+            numberMaze = Integer.parseInt(br.readLine());
+
             while (br.ready()) {
-                count++;
+                String rowsColumns[] = br.readLine().split(" ");
+                rowsCount = Byte.parseByte(rowsColumns[1]);
+                columnsCount = Byte.parseByte(rowsColumns[0]);
+                //Montar a matriz temporária.
+                byte rowPosition = 0;
+                while(rowPosition != rowsCount) {
+                    String line[] = br.readLine().split(" ");
+
+                    for (byte columnPosition = 0; columnPosition < line.length; columnPosition++) {
+                       if(line[columnPosition].equals("X")){
+                           maze[rowPosition][columnPosition] = CURRENT_LOCATION;
+                           initialPositionX = rowPosition;
+                           initialPositionY = columnPosition;
+                       }else{
+                            maze[rowPosition][columnPosition] = Byte.parseByte(line[columnPosition]);
+                       }
+                    }
+                    rowPosition++;
+                }
+
+                //Resolver o labirinto...
             }
 
             br.close();
@@ -92,24 +116,6 @@ public class BackTracking {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public static FileData examineLine(String line) {
-        FileData data 		= new FileData();
-        String[] analise 	= line.split(" ");
-        data.diseaseName 	= analise[0];
-
-        data.gene = new String[Integer.parseInt(analise[1])];
-        for (int i = 0; i < data.gene.length; i ++)
-            data.gene[i] = analise[i+2];
-
-        return data;
-    }
-
-    private static class FileData {
-        public String diseaseName;
-        public String[] gene;
-        public byte percentageMatched;
     }
 
     //Armazenar a lista de soluções

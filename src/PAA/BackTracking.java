@@ -58,10 +58,6 @@ public class BackTracking {
 
             byte previousDirection = maze[currentLocationX][currentLocationY];
             //Verifica se a solução é válida
-            if(currentLocationX == 3 && currentLocationY == 2)
-            {
-                System.out.println("q234");
-            }
             if(isValidSolution(maze,currentLocationX,currentLocationY)) {
                 steps.append("SAIDA ["+currentLocationX+","+currentLocationY+"]\n");
                 return;

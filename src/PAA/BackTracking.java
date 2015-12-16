@@ -25,7 +25,7 @@ public class BackTracking {
 
     //Variavéis usadas a cada rodada do algoritmo
     static byte[][] maze            = new byte [100][100]; // Não irá ser preciso ficar limpando a matriz toda hora.
-    static byte [] solutionList     = new byte [1000];
+    static byte [] solutionList     = new byte [3000];
     static short solutionPos        = 0;
     static byte rowsCount           = 0;
     static byte columnsCount        = 0;
@@ -46,6 +46,7 @@ public class BackTracking {
     }
 
     public static void runBackTracking(){
+        solutionPos = 0;
         createListName(currentMazePos);
         createInitialStep(initialPositionX,initialPositionY);
         //Empilha posição de início ao conjunto solução.

@@ -9,7 +9,7 @@ public class BinarySearch<E extends Comparable<E>> {
 		int mid = 0;
 
 		while( left <= right){
-			mid = midvalue(left, right);
+			mid = midValue(left, right);
 			// Se o valor do item a ser achado for maior ao do array é necessário avançar para direita.
 			// arrayItem < item
 			if (array[mid].compareTo(item) <= -1)
@@ -25,7 +25,7 @@ public class BinarySearch<E extends Comparable<E>> {
 		return null;
 	}
 
-	private int midvalue(int left, int right)
+	private int midValue(int left, int right)
 	{
 		return left +(right - left)/2;
 	}

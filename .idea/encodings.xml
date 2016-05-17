@@ -3,6 +3,7 @@
   <component name="Encoding" defaultCharsetForPropertiesFiles="ISO-8859-1">
     <file url="file://$PROJECT_DIR$/src/PAA/BackTracking.java" charset="ISO-8859-1" />
     <file url="file://$PROJECT_DIR$/src/PAA/KMP.java" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/src/structs/BinaryTree.java" charset="ISO-8859-1" />
     <file url="PROJECT" charset="ISO-8859-1" />
   </component>
 </project>

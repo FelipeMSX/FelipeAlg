@@ -9,7 +9,7 @@ import static org.junit.Assert.*;
  */
 public class QuickSortTest {
 
-    @Test(timeout = 1000000)
+    @Test(timeout = 1000)
     public void testSort() throws Exception {
         //Teste para ordenzação de string
         {

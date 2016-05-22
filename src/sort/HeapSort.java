@@ -23,7 +23,7 @@ public class HeapSort<E extends Comparable<E>> {
         }
     }
 
-    public void minHeapify(E input[], int i, int n) {
+    private void minHeapify(E input[], int i, int n) {
         int P = i;
         int E = getLeft(i);
         int D = getRight(i);

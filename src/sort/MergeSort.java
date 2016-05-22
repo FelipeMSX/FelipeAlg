@@ -1,18 +1,24 @@
 package sort;
 
+
+/*
+	Descrição:
+		- Aceita valores iguais.
+        - Ordem Crescente.
+*/
 public class MergeSort<E extends Comparable<E>> {
 
-	E sortedDiseases[];
+	E tempVector[];
 
 	//Prepara a função antes de ser chamada
-	public void merge(E input[])
+	public void sort(E input[])
 	{
 		mergesort(input,input.length);
 	}
 
 	private void mergesort(E input[], int length){
 
-		sortedDiseases = (E[]) new Comparable[length];
+		tempVector = (E[]) new Comparable[length];
 		merge(input, 0, length -1);
 	}
 
@@ -34,18 +40,18 @@ public class MergeSort<E extends Comparable<E>> {
 
 			// Se já passou do fim, significa que não possui mais elementos do meio pro fim para inserir no vetor
 			if(j > end)
-				sortedDiseases[k++] = input[i++];
+				tempVector[k++] = input[i++];
 				// Se i > meio, significa que não existe mais elementos do inicio ao fim para comparar, agora é só adicioar do meio +1 ao fim.
 			else if(i > middle)
-				sortedDiseases[k++] = input[j++];
-			else if(input[i].compareTo(input[j]) >= 0)
-				sortedDiseases[k++] = input[i++];
+				tempVector[k++] = input[j++];
+			else if(input[i].compareTo(input[j]) <= 0)
+				tempVector[k++] = input[i++];
 			else
-				sortedDiseases[k++] = input[j++];
+				tempVector[k++] = input[j++];
 		}
 		//Copiar os elementos para o vetor entrada
 		for(int w = init ; w <= end; w++)
-			input[w] = sortedDiseases[w];
+			input[w] = tempVector[w];
 	}
 
 }

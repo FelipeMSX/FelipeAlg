@@ -1,12 +1,14 @@
 package sort;
 
+
+/*
+	Descrição:
+		- Aceita valores iguais.
+        - O pivô é o elemento do meio.
+        - Ordem Crescente.
+*/
 public class QuickSort<E extends Comparable<E>> {
 
-    /*
-        Descrição:
-            - Aceita valores iguais.
-            - O pivô é o elemento do meio.
-     */
 	public  void sort(E input[]) {
 		quicksort(input,0, input.length-1);
 	}

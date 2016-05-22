@@ -11,14 +11,14 @@ import exception.EmptyCollectionException;
 		-Inserção é na posição mais a esquerda não vazia.
 		-Remoção é retirada o primeiro elmento do vetor.
  */
-public class StaticQueue<E extends Comparable<E>> extends Queue_Stack<E> {
+public class StaticStack<E extends Comparable<E>> extends Queue_Stack<E> {
 
 
-	public StaticQueue(int maxSize) {
+	public StaticStack(int maxSize) {
 		super(maxSize);
 	}
 
-	public StaticQueue(int maxSize, boolean isResizable) {
+	public StaticStack(int maxSize, boolean isResizable) {
 		super(maxSize,isResizable);
 	}
 
@@ -36,28 +36,13 @@ public class StaticQueue<E extends Comparable<E>> extends Queue_Stack<E> {
 		if(isEmpty()) {
 			throw new EmptyCollectionException();
 		}else {
-			E temp = vector[--currentSize];
-			vector[currentSize] = null;
+			E obj = vector[0];
+			currentSize--;
+			for(int i = 0; i < currentSize; i++){
+				vector[i] = vector[i+1];
+			}
 
-			return temp;
-		}
-	}
-
-	@Override
-	public E getFirst(){
-		if(isEmpty()) {
-			throw new EmptyCollectionException();
-		}else {
-			return vector[currentSize-1];
-		}
-	}
-
-	@Override
-	public E getLast(){
-		if(isEmpty()) {
-			throw new EmptyCollectionException();
-		}else {
-			return vector[0];
+			return obj;
 		}
 	}
 }

@@ -10,7 +10,7 @@ package sort;
 public class HeapSort<E extends Comparable<E>> {
 
 
-    public void heapsort(E input[]){
+    public void sort(E input[]){
         heapsort(input,input.length);
     }
 

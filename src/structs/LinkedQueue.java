@@ -2,7 +2,7 @@ package structs;
 
 import _abstract.LinkedStruct;
 import _interfaces.Queue_Stacks;
-import exception.EmptyListException;
+import exception.EmptyCollectionException;
 import nodes.LinkedNode;
 /**
  * Created by Felipe on 06/10/2015.
@@ -40,7 +40,7 @@ public class LinkedQueue<E> extends LinkedStruct<E> implements Queue_Stacks<E> {
 	public E remove() {
 		if(isEmpty())
 		{
-			throw new EmptyListException("The list is empty.");
+			throw new EmptyCollectionException("The list is empty.");
 		}else
 		{
 			LinkedNode<E> node = head.getNext();
@@ -64,7 +64,7 @@ public class LinkedQueue<E> extends LinkedStruct<E> implements Queue_Stacks<E> {
 		if(!isEmpty())
 			return head.getNext().getObject();
 		else
-			throw new EmptyListException();
+			throw new EmptyCollectionException();
 	}
 
 	@Override
@@ -79,6 +79,6 @@ public class LinkedQueue<E> extends LinkedStruct<E> implements Queue_Stacks<E> {
 			return node.getObject();
 		}
 		else
-			throw new EmptyListException();
+			throw new EmptyCollectionException();
 	}
 }

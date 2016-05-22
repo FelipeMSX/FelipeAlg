@@ -5,6 +5,12 @@ package exception;
  */
 public class EqualsElementException extends  RuntimeException {
 
+    //Default Message
+    public EqualsElementException()
+    {
+        super("The collection does not accept the same elements!");
+    }
+
     public EqualsElementException(String message)
     {
         super(message);

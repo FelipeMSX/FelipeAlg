@@ -2,7 +2,7 @@ package structs;
 
 import _abstract.StaticStruct;
 import _interfaces.Queue_Stacks;
-import exception.EmptyListException;
+import exception.EmptyCollectionException;
 
 /**
  * Created by Felipe on 06/10/2015.
@@ -36,7 +36,7 @@ public class StaticQueue<E> extends StaticStruct<E> implements Queue_Stacks<E>{
 	public E remove() {
 		if(isEmpty())
 		{
-			throw new EmptyListException();
+			throw new EmptyCollectionException();
 		}else
 		{
 			E temp = vector[0];

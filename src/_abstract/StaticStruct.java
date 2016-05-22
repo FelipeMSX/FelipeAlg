@@ -1,7 +1,7 @@
 package _abstract;
 
 import _interfaces.Common;
-import exception.EmptyListException;
+import exception.EmptyCollectionException;
 
 /**
  * Created by Felipe on 06/10/2015.
@@ -43,7 +43,7 @@ public abstract class StaticStruct<E> implements Common<E> {
 		if(!isEmpty())
 			return vector[0];
 		else
-			throw new EmptyListException();
+			throw new EmptyCollectionException();
 	}
 
 	@Override
@@ -51,7 +51,7 @@ public abstract class StaticStruct<E> implements Common<E> {
 		if(!isEmpty())
 			return vector[size-1];
 		else
-			throw new EmptyListException();
+			throw new EmptyCollectionException();
 	}
 
 	public int getSize()

@@ -1,7 +1,7 @@
 package _abstract;
 
 import _interfaces.Common;
-import exception.EmptyListException;
+import exception.EmptyCollectionException;
 import nodes.LinkedNode;
 
 /**
@@ -28,7 +28,7 @@ public abstract class LinkedStruct<E>  implements Common<E> {
 		if(!isEmpty())
 			return null;
 		else
-			throw new EmptyListException();
+			throw new EmptyCollectionException();
 	}
 
 	@Override
@@ -36,7 +36,7 @@ public abstract class LinkedStruct<E>  implements Common<E> {
 		if(!isEmpty())
 			return null;
 		else
-			throw new EmptyListException();
+			throw new EmptyCollectionException();
 	}
 
 	public int getSize()

@@ -1,11 +1,12 @@
 package sort;
 
 public class QuickSort<E extends Comparable<E>> {
-	/*
-	 * Ordem crescente, Não aceita valores iguais
-	 *
-	 */
 
+    /*
+        Descrição:
+            - Aceita valores iguais.
+            - O pivô é o elemento do meio.
+     */
 	public  void sort(E input[]) {
 		quicksort(input,0, input.length-1);
 	}
@@ -15,38 +16,49 @@ public class QuickSort<E extends Comparable<E>> {
 	 */
 	private void quicksort(E V[], int inicio, int fim) {
 		if(inicio < fim) {
-			int pivo = partition(V, inicio, fim);
-			quicksort(V, inicio, pivo - 1);
-			quicksort(V, pivo + 1, fim);
+			int pivot = partition(V, inicio, fim);
+			quicksort(V, inicio, pivot - 1);
+			quicksort(V, pivot + 1, fim);
 		}
 	}
 	
-	private int partition(E input[], int inicio, int fim) {
-		int positionPivo = fim; // pivo será sempre o ultimo elemento;
-		int left = 0; int right = fim -1;
-		
-		// significa que i j acabaram de se cruzar
-		while(left < right) {
+	private int partition(E input[], int init, int end) {
+		int positionPivot = definePivot(init,end);
+		//Ao definir o pivô é preciso colocá-lo no fim.
+		swap(input,end,positionPivot);
+        positionPivot    = end;
+		int left        = init;
+		int right       = end -1;
 
-			//input[left] < input[positionPivo]
-			while(input[left].compareTo(input[positionPivo]) < 0)
+		// Rodar enquato left&right não se cruzarem no vetor.
+        // Varra com left da esquerda para direita o vetor até encontrar o elemento maior que o pivô.
+        // Varra com right da direita para esquerda o vetor até encontrar o elemento menor que o pivô.
+		while(left <= right) {
+
+			while((left <= right) && input[left].compareTo(input[positionPivot]) <= 0 )
 				left++;
 
-			//input[right] > input[positionPivo]
-			while(input[right].compareTo(input[positionPivo]) > 0)
-				right++;
-			
+			while((left <= right) && input[right].compareTo(input[positionPivot]) > 0  )
+				right--;
+
 			if(left < right) {
-				E temp = input[left];
-				input[left] = input[right];
-				input[right] = temp;
+				swap(input,left,right);
 			}else {
-				E temp = input[left];
-				input[left] = input[positionPivo];
-				input[positionPivo] = temp;
-				positionPivo = left;
+				swap(input,left,positionPivot);
+				positionPivot = left;
 			}
 		}
-		return positionPivo;
+		return positionPivot;
+	}
+
+
+	private void swap(E[] input ,int positionX, int positionY){
+		E temp = input[positionX];
+		input[positionX] = input[positionY];
+		input[positionY] = temp;
+	}
+
+	private int definePivot(int init, int end){
+        return init +(end - init)/2;
 	}
 }

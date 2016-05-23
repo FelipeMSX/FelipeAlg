@@ -13,63 +13,84 @@ public class StaticStackTest {
 
     @Test
     public void testPush() throws Exception {
-        StaticStack<Integer> stack = new StaticStack(3,false);
-        stack.push(new Integer(2));
-        stack.push(new Integer(4));
-        stack.push(new Integer(6));
+        StaticStack<Integer> queue = new StaticStack(100);
+        queue.push(new Integer(4));
+        queue.push(new Integer(7));
+        queue.push(new Integer(10));
+        queue.push(new Integer(11));
 
-        assertTrue(stack.isFull());
-        try{
-            stack.push(new Integer(2));
-            stack.push(new Integer(2));
-            assertTrue(false);
-        }catch (FullCollectionException e){
-
-        }
-        assertTrue(stack.isFull());
+        //Checar o tamanho;
+        assertEquals(4,queue.getCurrentSize());
+        assertEquals(new Integer(7),queue.retrieve(new Integer(7)));
     }
 
     @Test
     public void testPop() throws Exception {
-        StaticStack<Integer> stack = new StaticStack(10);
-        stack.push(new Integer(2));
-        stack.push(new Integer(4));
-        stack.push(new Integer(6));
-        assertEquals(new Integer(2),stack.pop());
-        assertEquals(new Integer(4),stack.pop());
-        assertEquals(new Integer(6),stack.pop());
-        assertTrue(stack.isEmpty());
+        StaticStack<Integer> queue = new StaticStack(100);
+        queue.push(new Integer(4));
 
-        //testar remoção de objeto com vetor vazio.
-        try{
-            stack.pop();
-            assertTrue(false);
+        assertEquals(new Integer(4),queue.pop());
+        assertEquals(0,queue.getCurrentSize());
+
+        try {
+            queue.pop();
+            assertTrue("A pilha não possui nenhum elemento!",false);
         }catch (EmptyCollectionException e){
 
         }
+    }
 
+    @Test
+    public void testMaxCapacity() throws  Exception {
+        StaticStack<Integer> queue = new StaticStack(2,false);
+        queue.push(new Integer(4));
+        queue.push(new Integer(7));
+
+        try{
+            queue.push(new Integer(10));
+        }catch (FullCollectionException e){
+
+        }
+
+        assertEquals(2,queue.getMaxSize());
     }
 
     @Test
     public void testGetFirst() throws  Exception{
-        StaticStack<Integer> stack = new StaticStack(10);
-        stack.push(new Integer(2));
-        stack.push(new Integer(4));
-        stack.push(new Integer(6));
-        assertEquals(new Integer(2),stack.getFirst());
-        stack.pop();
-        stack.push(new Integer(12));
-        assertEquals(new Integer(4),stack.getFirst());
+        StaticStack<Integer> queue = new StaticStack(10);
+        queue.push(new Integer(2));
+        queue.push(new Integer(4));
+        queue.push(new Integer(6));
+        assertEquals(new Integer(6),queue.getFirst());
+        queue.pop();
+        queue.push(new Integer(12));
+        assertEquals(new Integer(12),queue.getFirst());
+        queue.pop();
+        queue.pop();
+        queue.pop();
+        try{
+            queue.getFirst();
+            assertTrue("A pilha deveria estar vazia!",false);
+        }catch (EmptyCollectionException e){}
     }
 
     @Test
     public void testGetLast() throws  Exception{
-        StaticStack<Integer> stack = new StaticStack(10);
-        stack.push(new Integer(2));
-        stack.push(new Integer(4));
-        stack.push(new Integer(6));
-        assertEquals(new Integer(6),stack.getLast());
-        stack.push(new Integer(20));
-        assertEquals(new Integer(20),stack.getLast());
+        StaticStack<Integer> queue = new StaticStack(10);
+        queue.push(new Integer(2));
+        queue.push(new Integer(4));
+        queue.push(new Integer(6));
+        assertEquals(new Integer(2),queue.getLast());
+        queue.push(new Integer(20));
+        assertEquals(new Integer(2),queue.getLast());
+        queue.pop();
+        queue.pop();
+        queue.pop();
+        queue.pop();
+
+        try{
+            queue.getLast();
+            assertTrue("A pilha deveria estar vazia!",false);
+        }catch (EmptyCollectionException e){}
     }
 }

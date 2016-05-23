@@ -36,13 +36,28 @@ public class StaticStack<E extends Comparable<E>> extends Queue_Stack<E> {
 		if(isEmpty()) {
 			throw new EmptyCollectionException();
 		}else {
-			E obj = vector[0];
-			currentSize--;
-			for(int i = 0; i < currentSize; i++){
-				vector[i] = vector[i+1];
-			}
+			E temp = vector[--currentSize];
+			vector[currentSize] = null;
 
-			return obj;
+			return temp;
+		}
+	}
+
+	@Override
+	public E getFirst(){
+		if(isEmpty()) {
+			throw new EmptyCollectionException();
+		}else {
+			return vector[currentSize-1];
+		}
+	}
+
+	@Override
+	public E getLast(){
+		if(isEmpty()) {
+			throw new EmptyCollectionException();
+		}else {
+			return vector[0];
 		}
 	}
 }

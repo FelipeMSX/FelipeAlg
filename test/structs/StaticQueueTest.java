@@ -13,84 +13,63 @@ public class StaticQueueTest {
 
     @Test
     public void testPush() throws Exception {
-        StaticQueue<Integer> queue = new StaticQueue(100);
-        queue.push(new Integer(4));
-        queue.push(new Integer(7));
-        queue.push(new Integer(10));
-        queue.push(new Integer(11));
+        StaticQueue<Integer> stack = new StaticQueue(3,false);
+        stack.push(new Integer(2));
+        stack.push(new Integer(4));
+        stack.push(new Integer(6));
 
-        //Checar o tamanho;
-        assertEquals(4,queue.getCurrentSize());
-        assertEquals(new Integer(7),queue.retrieve(new Integer(7)));
+        assertTrue(stack.isFull());
+        try{
+            stack.push(new Integer(2));
+            stack.push(new Integer(2));
+            assertTrue(false);
+        }catch (FullCollectionException e){
+
+        }
+        assertTrue(stack.isFull());
     }
 
     @Test
     public void testPop() throws Exception {
-        StaticQueue<Integer> queue = new StaticQueue(100);
-        queue.push(new Integer(4));
+        StaticQueue<Integer> stack = new StaticQueue(10);
+        stack.push(new Integer(2));
+        stack.push(new Integer(4));
+        stack.push(new Integer(6));
+        assertEquals(new Integer(2),stack.pop());
+        assertEquals(new Integer(4),stack.pop());
+        assertEquals(new Integer(6),stack.pop());
+        assertTrue(stack.isEmpty());
 
-        assertEquals(new Integer(4),queue.pop());
-        assertEquals(0,queue.getCurrentSize());
-
-        try {
-            queue.pop();
-            assertTrue("A pilha não possui nenhum elemento!",false);
+        //testar remoção de objeto com vetor vazio.
+        try{
+            stack.pop();
+            assertTrue(false);
         }catch (EmptyCollectionException e){
 
         }
-    }
 
-    @Test
-    public void testMaxCapacity() throws  Exception {
-        StaticQueue<Integer> queue = new StaticQueue(2,false);
-        queue.push(new Integer(4));
-        queue.push(new Integer(7));
-
-        try{
-            queue.push(new Integer(10));
-        }catch (FullCollectionException e){
-
-        }
-
-        assertEquals(2,queue.getMaxSize());
     }
 
     @Test
     public void testGetFirst() throws  Exception{
-        StaticQueue<Integer> queue = new StaticQueue(10);
-        queue.push(new Integer(2));
-        queue.push(new Integer(4));
-        queue.push(new Integer(6));
-        assertEquals(new Integer(6),queue.getFirst());
-        queue.pop();
-        queue.push(new Integer(12));
-        assertEquals(new Integer(12),queue.getFirst());
-        queue.pop();
-        queue.pop();
-        queue.pop();
-        try{
-            queue.getFirst();
-            assertTrue("A pilha deveria estar vazia!",false);
-        }catch (EmptyCollectionException e){}
+        StaticQueue<Integer> stack = new StaticQueue(10);
+        stack.push(new Integer(2));
+        stack.push(new Integer(4));
+        stack.push(new Integer(6));
+        assertEquals(new Integer(2),stack.getFirst());
+        stack.pop();
+        stack.push(new Integer(12));
+        assertEquals(new Integer(4),stack.getFirst());
     }
 
     @Test
     public void testGetLast() throws  Exception{
-        StaticQueue<Integer> queue = new StaticQueue(10);
-        queue.push(new Integer(2));
-        queue.push(new Integer(4));
-        queue.push(new Integer(6));
-        assertEquals(new Integer(2),queue.getLast());
-        queue.push(new Integer(20));
-        assertEquals(new Integer(2),queue.getLast());
-        queue.pop();
-        queue.pop();
-        queue.pop();
-        queue.pop();
-
-        try{
-            queue.getLast();
-            assertTrue("A pilha deveria estar vazia!",false);
-        }catch (EmptyCollectionException e){}
+        StaticQueue<Integer> stack = new StaticQueue(10);
+        stack.push(new Integer(2));
+        stack.push(new Integer(4));
+        stack.push(new Integer(6));
+        assertEquals(new Integer(6),stack.getLast());
+        stack.push(new Integer(20));
+        assertEquals(new Integer(20),stack.getLast());
     }
 }

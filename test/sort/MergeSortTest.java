@@ -2,7 +2,7 @@ package sort;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
 
 /**
  * Created by Felipe on 21/05/2016.

@@ -2,7 +2,7 @@ package structs;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by Felipe on 22/05/2016.

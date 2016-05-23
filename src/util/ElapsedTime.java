@@ -2,7 +2,6 @@ package util;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Spliterator;
 
 public class ElapsedTime implements Iterable<Double> {
 	private long initTime;

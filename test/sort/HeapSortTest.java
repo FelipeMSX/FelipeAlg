@@ -3,8 +3,6 @@ package sort;
 import org.junit.Test;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import static org.junit.Assert.*;
-
 /**
  * Created by Felipe on 22/05/2016.
  */

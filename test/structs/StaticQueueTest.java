@@ -4,7 +4,8 @@ import exception.EmptyCollectionException;
 import exception.FullCollectionException;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by Felipe on 22/05/2016.

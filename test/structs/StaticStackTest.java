@@ -23,6 +23,7 @@ public class StaticStackTest {
         //Checar o tamanho;
         assertEquals(4,queue.getCurrentSize());
         assertEquals(new Integer(7),queue.retrieve(new Integer(7)));
+
     }
 
     @Test

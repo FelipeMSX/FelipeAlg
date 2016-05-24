@@ -55,12 +55,6 @@ public abstract class StaticStruct<E extends  Comparable<E>> implements Common<E
 	}
 
 	@Override
-	public boolean isFull()
-	{
-		return currentSize == maxSize;
-	}
-
-	@Override
 	public E getFirst() {
 		if(!isEmpty())
 			return vector[0];
@@ -100,6 +94,11 @@ public abstract class StaticStruct<E extends  Comparable<E>> implements Common<E
 		}else{
 			throw new EmptyCollectionException();
 		}
+	}
+
+	public boolean isFull()
+	{
+		return currentSize == maxSize;
 	}
 
 	protected void doubleCapacity() {

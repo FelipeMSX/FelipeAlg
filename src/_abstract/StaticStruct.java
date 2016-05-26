@@ -1,29 +1,43 @@
 package _abstract;
 
 import _interfaces.Common;
+import exception.ElementNotFoundException;
 import exception.EmptyCollectionException;
 import exception.FullCollectionException;
 
 /**
- * Created by Felipe on 06/10/2015.
+ * 	- Estrutura usada para criação das estrutura de dados com base em um vetor.Possui um valor padrão inicial de 100,
+ * 	quando esse valor atingir o limite é incrementado de acordo com o resizeValue. Por padrão, a estrutura irar crescer
+ * 	dinamicamente, mas, o usuário pode limitar isso.
  */
-/*
-	Descrição:
-		- Estrutura usada para criação das estrutura de dados com base em um vetor.
-		- Possui um valor padrão inicial de 100, quando esse valor atingir o limite é incrementado de acordo com o
-			resizeValue.
-		- Por padrão, a estrutura irar crescer dinamicamente, mas, o usuário pode limitar isso.
 
- */
-public abstract class StaticStruct<E extends  Comparable<E>> implements Common<E> {
+public abstract class StaticStruct<E extends Comparable<E>> implements Common<E> {
 
+	/**
+	 * Vetor onde serão armazenados os objetos genéricos.
+	 */
 	protected E[] vector;
+	/**
+	 * Indica o atual tamanho da coleção.
+	 */
 	protected int currentSize;
+	/**
+	 *  Quantidade de elementos que a coleção pode conter.
+	 */
 	protected int maxSize;
-	//Valor usado quando coleção aumenta sua capacidade, esse valor é incremenado ao atual tamanho do vetor.
+	/**
+	 * valor que será incrementado a coleção quando o seu valor máximo for atingido.
+	 */
 	protected int resizeValue;
+	/**
+	 * Ao atingir o máximo a coleção pode tentar crescer, se for TRUE isso será feito, caso contrário, ao atingir o
+	 * máximo será lançado uma exceção.
+	 */
 	protected boolean isResizable;
 
+	/**
+	 * Construtor padrão que inicializa a lista com o valor padrão de 100. Por padrão cresce dinâmicamente.
+	 */
 	public StaticStruct()
 	{
 		maxSize 	= 100;
@@ -32,6 +46,9 @@ public abstract class StaticStruct<E extends  Comparable<E>> implements Common<E
 		isResizable = true;
 	}
 
+	/**
+	 * @param maxSize Tamanho máximo que a coleção pode atingir.
+	 */
 	public StaticStruct(int maxSize)
 	{
 		this.maxSize 		= maxSize;
@@ -40,6 +57,10 @@ public abstract class StaticStruct<E extends  Comparable<E>> implements Common<E
 		isResizable 		= true;
 	}
 
+	/**
+	 * @param maxSize Tamanho máximo que a coleção pode atingir.
+	 * @param isResizable Indica se a coleção pode crescer dinamicamente.
+	 */
 	public StaticStruct(int maxSize, boolean isResizable)
 	{
 		this.maxSize 		= maxSize;
@@ -49,25 +70,36 @@ public abstract class StaticStruct<E extends  Comparable<E>> implements Common<E
 
 	}
 
+	/**
+	 * @return TRUE se a lista estiver vazia, caso contrário, será FALSE.
+	 */
 	@Override
 	public boolean isEmpty() {
 		return currentSize == 0;
 	}
 
+	/**
+	 * Se a coleção estiver vazia lança uma exceção, caso contrário, irá tentar recuperar o primeiro elemento da coleção.
+	 * @return Obtém o primeiro elemento da coleção.
+	 */
 	@Override
 	public E getFirst() {
-		if(!isEmpty())
-			return vector[0];
-		else
+		if(isEmpty())
 			throw new EmptyCollectionException();
+		else
+			return vector[0];
 	}
 
+	/**
+	 * Se a coleção estier vazia lança uma exceção, caso contrário, irá tentar recuperar o último elemento da coleção.
+	 * @return Obtém o último elemento da coleção.
+	 */
 	@Override
 	public E getLast() {
-		if(!isEmpty())
-			return vector[currentSize -1];
-		else
+		if(isEmpty())
 			throw new EmptyCollectionException();
+		else
+			return vector[currentSize -1];
 	}
 
 	@Override
@@ -76,31 +108,46 @@ public abstract class StaticStruct<E extends  Comparable<E>> implements Common<E
 		return currentSize;
 	}
 
+	/**
+	 * Irá apagar a coleção por completo.
+	 */
 	@Override
 	public void disposeAll() {
-		vector = null;
+		vector = (E[]) new Comparable[maxSize];
 		currentSize = 0;
 	}
 
+	/**
+	 * Se a coleção for vazia lançará uma exceção, caso contrário, irá procurar o elemento na lista de acordo com o
+	 * parâmetro, se ainda assim nenhum objeto for encontrado também lançará uma exceção.
+	 * @param obj Usado como parâmetro de comparação.
+	 * @return Retorna o objeto com todos os dados.
+	 */
 	@Override
 	public E retrieve(E obj) {
-		if(!isEmpty()){
-
+		if(isEmpty()){
+			throw new EmptyCollectionException();
+		}else{
 			for(int i =0; i < currentSize ;i++)
 				if(vector[i].compareTo(obj) == 0)
 					return vector[i];
 
-			return null;
-		}else{
-			throw new EmptyCollectionException();
+			throw new ElementNotFoundException();
 		}
 	}
 
-	public boolean isFull()
-	{
+	/**
+	 * @return TRUE se a coleção estiver com a capacidade máxima. FALSE se não estiver cheia.
+	 */
+	public boolean isFull() {
 		return currentSize == maxSize;
 	}
 
+
+	/**
+	 *  É verificado antes de tentar crescer a coleção se sua propriedade "isResizable", se for FALSE lançará uma exceção,
+	 *  Se for TRUE irá incrementar o tamanho atual da coleção com o "resizeValue".
+	 */
 	protected void doubleCapacity() {
 		if (!isResizable){
 			throw new FullCollectionException();

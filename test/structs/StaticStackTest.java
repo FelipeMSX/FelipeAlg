@@ -2,6 +2,7 @@ package structs;
 
 import exception.EmptyCollectionException;
 import exception.FullCollectionException;
+import exception.NullObjectException;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -14,16 +15,31 @@ public class StaticStackTest {
 
     @Test
     public void testPush() throws Exception {
-        StaticStack<Integer> queue = new StaticStack(100);
-        queue.push(new Integer(4));
-        queue.push(new Integer(7));
-        queue.push(new Integer(10));
-        queue.push(new Integer(11));
+        //Tetando inserção normal.
+        {
+            StaticStack<Integer> queue = new StaticStack(100);
+            queue.push(new Integer(4));
+            queue.push(new Integer(7));
+            queue.push(new Integer(10));
+            queue.push(new Integer(11));
 
-        //Checar o tamanho;
-        assertEquals(4,queue.getCurrentSize());
-        assertEquals(new Integer(7),queue.retrieve(new Integer(7)));
+            //Checar o tamanho;
+            assertEquals(4, queue.getCurrentSize());
+            assertEquals(new Integer(7), queue.retrieve(new Integer(7)));
+        }
+        //Testando inserção com valores nulo e com a capacidade estourada.
+        {
+            StaticStack<Integer> queue = new StaticStack(2);
+            queue.push(new Integer(4));
+            queue.push(new Integer(7));
 
+            try{
+                queue.push(null);
+                assertTrue("Não é possível inserção de valores nulo!",false);
+            }catch(NullObjectException e){}
+
+            queue.push(new Integer(10));
+        }
     }
 
     @Test

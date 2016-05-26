@@ -6,14 +6,11 @@ import exception.EmptyCollectionException;
 import exception.NullObjectException;
 import nodes.LinkedNode;
 /**
- * Created by Felipe on 23/05/2016.
+ * Classe abstrata usada para construção das estruturas linkadas. Possui um iterator por padrão.A lista pode expandir
+ * até o limite de memória do computador.
  */
 
-/* Descrição:
-        - Classe abstrata usada para construção das estruturas linkadas.
-        - Possui um iterator por padrão.
-        - A lista pode expandir até o limite de memória do computador.
- */
+
 public class LinkedList<E extends Comparable<E>> extends LinkedStruct<E,LinkedNode<E>> {
 
     /**
@@ -67,7 +64,7 @@ public class LinkedList<E extends Comparable<E>> extends LinkedStruct<E,LinkedNo
                 LinkedNode<E> search = head.getNext();
                 LinkedNode<E> previous = head.getNext();
 
-                while (search.hasNextNode()){
+                while (previous.hasNextNode()){
                     if(search.getObject().compareTo(obj) == 0) {
                         previous.setNext(search.getNext());
                         search.setNext(null);
@@ -100,5 +97,4 @@ public class LinkedList<E extends Comparable<E>> extends LinkedStruct<E,LinkedNo
             return temp.getObject();
         }
     }
-
 }

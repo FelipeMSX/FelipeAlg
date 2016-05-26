@@ -2,35 +2,54 @@ package structs;
 
 import _abstract.Queue_Stack;
 import exception.EmptyCollectionException;
+import exception.NullObjectException;
 
 /**
- * Created by Felipe on 06/10/2015.
+ * 	Inserção é na posição mais a esquerda não vazia. Remoção é retirada o primeiro elmento do vetor.
  */
-/*
-	Descrição:
-		-Inserção é na posição mais a esquerda não vazia.
-		-Remoção é retirada o primeiro elmento do vetor.
- */
+
 public class StaticStack<E extends Comparable<E>> extends Queue_Stack<E> {
 
 
+	/**
+	 * @param maxSize Inicializa a pilha com um valor limite máximo.
+	 */
 	public StaticStack(int maxSize) {
 		super(maxSize);
 	}
 
+	/**
+	 * @param maxSize Inicializa a pilha com um valor limite máximo.
+	 * @param isResizable Propriedade que define se a pilha irá crescer dinamicamente.
+	 */
 	public StaticStack(int maxSize, boolean isResizable) {
 		super(maxSize,isResizable);
 	}
 
+	/**
+	 * Objeto a ser inserido não pode ser nulo, antes de tentar inserir será verificado se a lista está cheia, após
+	 * isso irá inserir o objeto.
+	 * @param obj Elemento que será inserido na pilha.
+	 */
 	@Override
-	public void push(E object) {
+	public void push(E obj) {
+		if(obj == null){
+			throw new NullObjectException();
+		}
+		else
 		if(isFull()) {
 			doubleCapacity();
+			if(!isFull())
+				push(obj);
 		}else {
-			vector[currentSize++] = object;
+			vector[currentSize++] = obj;
 		}
 	}
 
+	/**
+	 * Se a lista estiver vazia lançará uma exceção, caso contrário, irá remover o objeto normalmente.
+	 * @return Elemento que primeiro deve ser retirado da pilha.
+	 */
 	@Override
 	public E pop() {
 		if(isEmpty()) {
@@ -43,6 +62,10 @@ public class StaticStack<E extends Comparable<E>> extends Queue_Stack<E> {
 		}
 	}
 
+	/**
+	 * Se a coleção estiver vazia lançará uma exceção, caso contrário, irá retornar o primeiro elemento a sair da pilha.
+	 * @return Retorna o primeiro elemento a ser removido da pilha.
+	 */
 	@Override
 	public E getFirst(){
 		if(isEmpty()) {
@@ -52,6 +75,10 @@ public class StaticStack<E extends Comparable<E>> extends Queue_Stack<E> {
 		}
 	}
 
+	/**
+	 * Se a coleção estiver vazia lançará uma exceção, caso contrário, irá retornar o último elemento a sair da pilha.
+	 * @return O útimo elemento a ser retirado da pilha.
+	 */
 	@Override
 	public E getLast(){
 		if(isEmpty()) {

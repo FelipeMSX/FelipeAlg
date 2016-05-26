@@ -1,7 +1,7 @@
 package _abstract;
 
 /**
- * Created by Felipe on 22/05/2016.
+ * Classe abstrata usada como base para as filas e pilhas e suas estruturas derividas.
  */
 public abstract class Queue_Stack <E extends  Comparable<E>> extends StaticStruct<E> {
 

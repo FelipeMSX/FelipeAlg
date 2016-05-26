@@ -2,6 +2,7 @@ package structs;
 
 import exception.EmptyCollectionException;
 import exception.FullCollectionException;
+import exception.NullObjectException;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -28,6 +29,12 @@ public class StaticQueueTest {
 
         }
         assertTrue(stack.isFull());
+
+        //Testando a fila para inserção de valores nulo
+        try{
+            stack.push(null);
+            assertTrue("Inserão de valor nulo não é permitido!",false);
+        }catch(NullObjectException e){}
     }
 
     @Test

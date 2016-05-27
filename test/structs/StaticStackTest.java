@@ -3,6 +3,7 @@ package structs;
 import exception.EmptyCollectionException;
 import exception.FullCollectionException;
 import exception.NullObjectException;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -13,102 +14,89 @@ import static org.junit.Assert.assertTrue;
  */
 public class StaticStackTest {
 
+    private StaticStack<Integer> stack;
+    private StaticStack<Integer> stackLimited;
+
+    @Before
+    public void initialize() throws Exception {
+        stackLimited = new StaticStack(3,false);
+        stackLimited.push(3);
+        stackLimited.push(6);
+        stackLimited.push(9);
+        stack = new StaticStack(3);
+        stack.push(3);
+        stack.push(6);
+        stack.push(9);
+    }
+
+
+    @Test(expected = NullObjectException.class)
+    public void testPushNullObject() throws Exception {
+        stack.push(null);
+    }
+
     @Test
     public void testPush() throws Exception {
         //Tetando inserção normal.
-        {
-            StaticStack<Integer> queue = new StaticStack(100);
-            queue.push(new Integer(4));
-            queue.push(new Integer(7));
-            queue.push(new Integer(10));
-            queue.push(new Integer(11));
-
-            //Checar o tamanho;
-            assertEquals(4, queue.getCurrentSize());
-            assertEquals(new Integer(7), queue.retrieve(new Integer(7)));
-        }
-        //Testando inserção com valores nulo e com a capacidade estourada.
-        {
-            StaticStack<Integer> queue = new StaticStack(2);
-            queue.push(new Integer(4));
-            queue.push(new Integer(7));
-
-            try{
-                queue.push(null);
-                assertTrue("Não é possível inserção de valores nulo!",false);
-            }catch(NullObjectException e){}
-
-            queue.push(new Integer(10));
-        }
+        stack.push(4);
+        stack.push(7);
+        stack.push(10);
+        assertTrue("Tamanho deve ser 6!",stack.getCurrentSize() == 6);
     }
 
     @Test
     public void testPop() throws Exception {
-        StaticStack<Integer> queue = new StaticStack(100);
-        queue.push(new Integer(4));
+        assertEquals((Integer)9,stack.pop());
+        stack.push(4);
+        assertEquals("É esperado o número 4!",(Integer)4,stack.pop());
+        assertEquals(2,stack.getCurrentSize());
 
-        assertEquals(new Integer(4),queue.pop());
-        assertEquals(0,queue.getCurrentSize());
+    }
 
-        try {
-            queue.pop();
-            assertTrue("A pilha não possui nenhum elemento!",false);
-        }catch (EmptyCollectionException e){
-
-        }
+    @Test(expected = EmptyCollectionException.class)
+    public void testPopEmpty() throws Exception{
+        stack.disposeAll();
+        stack.pop();
     }
 
     @Test
     public void testMaxCapacity() throws  Exception {
-        StaticStack<Integer> queue = new StaticStack(2,false);
-        queue.push(new Integer(4));
-        queue.push(new Integer(7));
+        stack.push(4);
+        stack.push(7);
+        assertEquals(5,stack.getCurrentSize());
+    }
 
-        try{
-            queue.push(new Integer(10));
-        }catch (FullCollectionException e){
-
-        }
-
-        assertEquals(2,queue.getMaxSize());
+    @Test(expected = FullCollectionException.class)
+    public void testMaxCapacityNoResizable() throws  Exception{
+        stackLimited.push(10);
     }
 
     @Test
     public void testGetFirst() throws  Exception{
-        StaticStack<Integer> queue = new StaticStack(10);
-        queue.push(new Integer(2));
-        queue.push(new Integer(4));
-        queue.push(new Integer(6));
-        assertEquals(new Integer(6),queue.getFirst());
-        queue.pop();
-        queue.push(new Integer(12));
-        assertEquals(new Integer(12),queue.getFirst());
-        queue.pop();
-        queue.pop();
-        queue.pop();
-        try{
-            queue.getFirst();
-            assertTrue("A pilha deveria estar vazia!",false);
-        }catch (EmptyCollectionException e){}
+        assertEquals("Esperado é o 9",(Integer)9,stack.getFirst());
+        stack.pop();
+        assertEquals("Esperado é o 6",(Integer)6,stack.getFirst());
+
+    }
+
+    @Test(expected = EmptyCollectionException.class)
+    public void testGetFirstEmpty() throws Exception{
+        stack.disposeAll();
+        stack.getFirst();
+    }
+
+
+    @Test(expected = EmptyCollectionException.class)
+    public void testGetLastEmpty() throws Exception{
+        stack.disposeAll();
+        stack.getLast();
     }
 
     @Test
     public void testGetLast() throws  Exception{
-        StaticStack<Integer> queue = new StaticStack(10);
-        queue.push(new Integer(2));
-        queue.push(new Integer(4));
-        queue.push(new Integer(6));
-        assertEquals(new Integer(2),queue.getLast());
-        queue.push(new Integer(20));
-        assertEquals(new Integer(2),queue.getLast());
-        queue.pop();
-        queue.pop();
-        queue.pop();
-        queue.pop();
+        assertEquals("Esperado é o 9",(Integer)3,stack.getLast());
+        stack.pop();
+        assertEquals("Esperado é o 6",(Integer)3,stack.getLast());
 
-        try{
-            queue.getLast();
-            assertTrue("A pilha deveria estar vazia!",false);
-        }catch (EmptyCollectionException e){}
     }
 }

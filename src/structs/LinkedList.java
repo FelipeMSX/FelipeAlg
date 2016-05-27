@@ -50,15 +50,12 @@ public class LinkedList<E extends Comparable<E>> extends LinkedStruct<E,LinkedNo
         }
         else{
             //Caso a coleção contenha somente um elemento.
-            if(currentSize == 1){
-                if(head.getNext().getObject().compareTo(obj) == 0) {
-                    E temp = head.getNext().getObject();
-                    head.setNext(null);
-                    currentSize--;
-                    return temp;
-                }else{
-                    throw new ElementNotFoundException();
-                }
+            if(head.getNext().getObject().compareTo(obj) == 0){
+                LinkedNode<E>  temp = head.getNext();
+                head.setNext(temp.getNext());
+                temp.setNext(null);
+                currentSize--;
+                return temp.getObject();
             //Caso quando a coleção possui vários elementos e é preciso procurar o elemento.
             }else{
                 LinkedNode<E> search = head.getNext();

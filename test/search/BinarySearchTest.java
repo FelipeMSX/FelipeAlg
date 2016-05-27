@@ -6,7 +6,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 /**
- * Created by Felipe on 16/05/2016.
+ * Classe de testes para BinarySearch
  */
 public class BinarySearchTest {
 

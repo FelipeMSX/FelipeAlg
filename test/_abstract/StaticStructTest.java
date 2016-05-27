@@ -3,7 +3,9 @@ package _abstract;
 import exception.ElementNotFoundException;
 import exception.EmptyCollectionException;
 import exception.FullCollectionException;
+import org.junit.Before;
 import org.junit.Test;
+import structs.LinkedList;
 import structs.StaticQueue;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
@@ -11,9 +13,19 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Created by Felipe on 25/05/2016.
+ * Teste criado para a classe abstrata StaticStruct, para isso, utilizamos uma clase concreta para testar os métodos.
  */
 public class StaticStructTest {
+
+    private StaticQueue<Integer> queue;
+    @Before
+    public void initialize() throws Exception {
+        queue = new StaticQueue();
+        queue.push(3);
+        queue.push(6);
+        queue.push(9);
+    }
+
     @Test
     public void testIsEmpty() throws Exception {
         StaticQueue<Integer> queue = new StaticQueue(10);
@@ -22,86 +34,60 @@ public class StaticStructTest {
 
     @Test
     public void testGetFirst() throws Exception {
-        StaticQueue<Integer> queue = new StaticQueue();
-        try{
-            queue.getFirst();
-            assertTrue("Não é possível obter um elemento de uma coleção vazia",false);
-        }catch(EmptyCollectionException e){}
+        assertEquals("É esperado o elemento 3!",(Integer)3,queue.getFirst());
+    }
 
-        queue.push(1);
-        queue.push(2);
-        queue.push(3);
-        assertEquals("É esperado o elemento 1!",(Integer)1,queue.getFirst());
+    @Test(expected = EmptyCollectionException.class)
+    public void testGetFirstEmpty() throws  Exception{
+        queue.disposeAll();
+        queue.getFirst();
     }
 
     @Test
     public void testGetLast() throws Exception {
-        StaticQueue<Integer> queue = new StaticQueue();
-        try{
-            queue.getLast();
-            assertTrue("Não é possível obter um elemento de uma coleção vazia",false);
-        }catch(EmptyCollectionException e){}
+        assertEquals("É esperado o elemento 9!",(Integer)9,queue.getLast());
+    }
 
-        queue.push(1);
-        queue.push(2);
-        queue.push(3);
-        assertEquals("É esperado o elemento 3!",(Integer)3,queue.getLast());
-
+    @Test(expected = EmptyCollectionException.class)
+    public void testGetLastEmpty() throws  Exception{
+        queue.disposeAll();
+        queue.getLast();
     }
 
     @Test
     public void testGetCurrentSize() throws Exception {
-        StaticQueue<Integer> queue = new StaticQueue();
-        try{
-            queue.getFirst();
-            assertTrue("Não é possível obter um elemento de uma coleção vazia",false);
-        }catch(EmptyCollectionException e){}
-
-        queue.push(1);
-        queue.push(2);
-        queue.push(3);
         queue.pop();
         queue.pop();
-        assertEquals("Tamanho esperado é 3!",(Integer)3,queue.getFirst());
-
+        assertEquals("Tamanho esperado é 1!",1,queue.getCurrentSize());
     }
 
     @Test
     public void testDisposeAll() throws Exception {
-        StaticQueue<Integer> queue = new StaticQueue();
-
-        queue.push(1);
-        queue.push(2);
         queue.disposeAll();
         queue.push(4);
         assertEquals("Tamanho esperado é 4!",(Integer)4,queue.getFirst());
-
     }
 
     @Test
     public void testRetrieve() throws Exception {
-        StaticQueue<Integer> queue = new StaticQueue();
-        try{
-            queue.retrieve(4);
-            assertTrue("Impossível obter um elemento de uma coleção vazia!",false);
-        }catch(EmptyCollectionException e){}
+        assertEquals("Item esperado  é 3!",(Integer)3,queue.retrieve(3));
+    }
 
-        queue.push(1);
-        queue.push(2);
-        queue.push(4);
-        assertEquals("Tamanho esperado é 4!",(Integer)4,queue.retrieve(4));
+    @Test(expected = EmptyCollectionException.class)
+    public void testRetrieveEmpty() throws  Exception{
+        queue.disposeAll();
+        queue.retrieve(4);
+    }
 
+    @Test(expected = ElementNotFoundException.class)
+    public void testRetrieveElementNotFound() throws  Exception{
         //Procura por um elemento que não existe na coleção.
-        try{
-            queue.retrieve(8);
-            assertTrue("Elemento não existe na coleção!",false);
-        }catch(ElementNotFoundException e){}
+        queue.retrieve(8);
     }
 
     @Test
     public void testIsFull() throws Exception {
         StaticQueue<Integer> queue = new StaticQueue(2);
-
         queue.push(1);
         queue.push(2);
         assertTrue("Deveria estar cheia a coleção!",queue.isFull());
@@ -109,31 +95,21 @@ public class StaticStructTest {
 
     @Test
     public void testDoubleCapacity() throws Exception {
-        //Testando para uma coleção não dinamicamente crescente.
-        {
-            StaticQueue<Integer> queue = new StaticQueue(2);
-            queue.setResizable(false);
-            queue.setAutoRezise(10);
-            queue.push(1);
-            queue.push(2);
-            try{
-                queue.push(3);
-                assertTrue("Não deveria permitir inserir um novo item",false);
-            }catch(FullCollectionException e){}
-
-            assertTrue("Deveria estar cheia a coleção!", queue.getCurrentSize() == 2);
-        }
-        //Testando
-        {
-            StaticQueue<Integer> queue = new StaticQueue(2);
-            queue.setResizable(true);
             queue.isResizable();
             queue.setAutoRezise(10);
             queue.push(1);
             queue.push(2);
             queue.push(3);
-            assertTrue("Tamanho da coleção deveria ser 3",queue.getCurrentSize() == 3);
-        }
+            assertTrue("Tamanho da coleção deveria ser 3",queue.getCurrentSize() == 6);
+    }
+    @Test(expected = FullCollectionException.class)
+    public void testDoubleCapacityNotResizable() throws Exception {
+        //Testando para uma coleção não dinamicamente crescente.
+        StaticQueue<Integer> queue = new StaticQueue(2,false);
+        queue.setAutoRezise(10);
+        queue.push(1);
+        queue.push(2);
+        queue.push(3);
     }
 
 }

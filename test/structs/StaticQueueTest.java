@@ -3,6 +3,7 @@ package structs;
 import exception.EmptyCollectionException;
 import exception.FullCollectionException;
 import exception.NullObjectException;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -13,71 +14,65 @@ import static org.junit.Assert.assertTrue;
  */
 public class StaticQueueTest {
 
+
+    private StaticQueue<Integer> queue;
+    private StaticQueue<Integer> queueLimited;
+
+    @Before
+    public void initialize() throws Exception {
+        queueLimited = new StaticQueue(3,false);
+        queueLimited.push(3);
+        queueLimited.push(6);
+        queueLimited.push(9);
+        queue = new StaticQueue(2);
+        queue.push(1);
+        queue.push(2);
+    }
+
+    @Test(expected = FullCollectionException.class)
+    public void testPushFullCollection() throws Exception {
+        queueLimited.push(new Integer(2));
+    }
+
+    @Test(expected = NullObjectException.class)
+    public void testPushNullObject() throws Exception {
+        //Testando a fila para inserção de valores nulo
+        queue.push(null);
+    }
+
     @Test
     public void testPush() throws Exception {
-        StaticQueue<Integer> stack = new StaticQueue(3,false);
-        stack.push(new Integer(2));
-        stack.push(new Integer(4));
-        stack.push(new Integer(6));
+        queue.push(3);
+        assertTrue(!queue.isFull());
+    }
 
-        assertTrue(stack.isFull());
-        try{
-            stack.push(new Integer(2));
-            stack.push(new Integer(2));
-            assertTrue(false);
-        }catch (FullCollectionException e){
-
-        }
-        assertTrue(stack.isFull());
-
-        //Testando a fila para inserção de valores nulo
-        try{
-            stack.push(null);
-            assertTrue("Inserão de valor nulo não é permitido!",false);
-        }catch(NullObjectException e){}
+    @Test(expected = EmptyCollectionException.class)
+    public void testPopEmptyCollection() throws Exception {
+        queue.disposeAll();
+        queue.pop();
+        queue.push(null);
     }
 
     @Test
     public void testPop() throws Exception {
-        StaticQueue<Integer> stack = new StaticQueue(10);
-        stack.push(new Integer(2));
-        stack.push(new Integer(4));
-        stack.push(new Integer(6));
-        assertEquals(new Integer(2),stack.pop());
-        assertEquals(new Integer(4),stack.pop());
-        assertEquals(new Integer(6),stack.pop());
-        assertTrue(stack.isEmpty());
-
-        //testar remoção de objeto com vetor vazio.
-        try{
-            stack.pop();
-            assertTrue(false);
-        }catch (EmptyCollectionException e){
-
-        }
-
+        assertEquals(new Integer(3),queueLimited.pop());
+        assertEquals(new Integer(6),queueLimited.pop());
+        assertEquals(new Integer(9),queueLimited.pop());
+        assertTrue(queueLimited.isEmpty());
     }
 
     @Test
     public void testGetFirst() throws  Exception{
-        StaticQueue<Integer> stack = new StaticQueue(10);
-        stack.push(new Integer(2));
-        stack.push(new Integer(4));
-        stack.push(new Integer(6));
-        assertEquals(new Integer(2),stack.getFirst());
-        stack.pop();
-        stack.push(new Integer(12));
-        assertEquals(new Integer(4),stack.getFirst());
+        assertEquals(new Integer(3),queueLimited.getFirst());
+        queueLimited.pop();
+        queueLimited.push(new Integer(12));
+        assertEquals(new Integer(6),queueLimited.getFirst());
     }
 
     @Test
     public void testGetLast() throws  Exception{
-        StaticQueue<Integer> stack = new StaticQueue(10);
-        stack.push(new Integer(2));
-        stack.push(new Integer(4));
-        stack.push(new Integer(6));
-        assertEquals(new Integer(6),stack.getLast());
-        stack.push(new Integer(20));
-        assertEquals(new Integer(20),stack.getLast());
+        assertEquals(new Integer(2),queue.getLast());
+        queue.push(new Integer(20));
+        assertEquals(new Integer(20),queue.getLast());
     }
 }

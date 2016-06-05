@@ -25,7 +25,6 @@ public abstract class LinkedStruct <E extends  Comparable<E>,T extends LinkedNod
      */
     protected int currentSize;
 
-
     public abstract void insert(E obj);
     //Remover um específico elemento da lista;
     public abstract E remove(E obj);
@@ -136,16 +135,11 @@ public abstract class LinkedStruct <E extends  Comparable<E>,T extends LinkedNod
             T next = (T) head.getNext();
             @Override
             public boolean hasNext() {
-                if(next == null)
-                    return false;
-                else{
-                    return next.hasNextNode();
-                }
+                return next != null;
             }
 
             @Override
             public E next() {
-
                 E object = next.getObject();
                 next = (T) next.getNext();
                 return object;

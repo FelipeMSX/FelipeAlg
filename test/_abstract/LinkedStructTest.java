@@ -27,7 +27,7 @@ public class LinkedStructTest {
 
     @Test
     public void testGetFirst() throws Exception {
-        assertEquals("Primiro elemento deveria ser o 9 !",(Integer)9,list.getFirst());
+        assertEquals("Primiro elemento deveria ser o 9 !",(Integer)3,list.getFirst());
     }
 
     @Test(expected = EmptyCollectionException.class)
@@ -39,7 +39,7 @@ public class LinkedStructTest {
 
     @Test
     public void testGetLast() throws Exception {
-        assertEquals("Último elemento deveria ser o 3 !",(Integer)3,list.getLast());
+        assertEquals("Último elemento deveria ser o 3 !",(Integer)9,list.getLast());
     }
 
     @Test(expected = EmptyCollectionException.class)
@@ -86,9 +86,10 @@ public class LinkedStructTest {
     public void testIterator() throws Exception {
         //Teste com o iterator com a lista com alguns elementos.
         int i = 0;
+
         for(Integer integer: list){
             if(i == 0){
-                assertEquals("Primeiro elemento da coleção deve ser o 9",(Integer)9,integer);
+                assertEquals("Primeiro elemento da coleção deve ser o 9",(Integer)3,integer);
             }
             else
             if(i == 1){
@@ -96,8 +97,9 @@ public class LinkedStructTest {
             }
             else
             if(i == 2){
-                assertEquals("Primeiro elemento da coleção deve ser o 3",(Integer)3,integer);
+                assertEquals("Primeiro elemento da coleção deve ser o 3",(Integer)9,integer);
             }
+
             i++;
         }
     }

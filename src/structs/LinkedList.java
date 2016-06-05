@@ -6,7 +6,7 @@ import exception.EmptyCollectionException;
 import exception.NullObjectException;
 import nodes.LinkedNode;
 /**
- * Classe abstrata usada para construção das estruturas linkadas. Possui um iterator por padrão.A lista pode expandir
+ *  Possui um iterator por padrão.A lista pode expandir
  * até o limite de memória do computador.
  */
 
@@ -14,7 +14,7 @@ import nodes.LinkedNode;
 public class LinkedList<E extends Comparable<E>> extends LinkedStruct<E,LinkedNode<E>> {
 
     /**
-     * Insere um novo elemento não nulo na coleção, as inserções são sempre feitas na cabeça.
+     * Insere um novo elemento não nulo na coleção, as inserções são sempre feitas no final.
      * @param obj O objeto a ser incluido na coleção
      */
     @Override
@@ -26,8 +26,12 @@ public class LinkedList<E extends Comparable<E>> extends LinkedStruct<E,LinkedNo
         if(isEmpty()){
             head.setNext(node);
         }else{
-            node.setNext(head.getNext());
-            head.setNext(node);
+            LinkedNode<E> searchNode = head.getNext();
+
+            while(searchNode.hasNextNode()){
+                searchNode = searchNode.getNext();
+            }
+            searchNode.setNext(node);
         }
         currentSize++;
     }

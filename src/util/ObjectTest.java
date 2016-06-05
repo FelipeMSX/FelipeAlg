@@ -1,22 +1,22 @@
 package util;
 
-public class ObjectTeste implements Comparable<ObjectTeste>{
+public class ObjectTest implements Comparable<ObjectTest>{
 	private int iD;
 	private String name;
 	
-	public ObjectTeste(){
+	public ObjectTest(){
 		this.iD = 0;
 		this.name = "";
 	}
 
-	public ObjectTeste(int id, String name){
+	public ObjectTest(int id, String name){
 		this.iD = id;
 		this.name = name;
 	}
 
 
 	@Override
-	public int compareTo(ObjectTeste arg0) {
+	public int compareTo(ObjectTest arg0) {
 		if(this.iD > arg0.getiD())
 			return 1;
 		else 

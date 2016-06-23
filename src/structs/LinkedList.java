@@ -14,7 +14,7 @@ import nodes.LinkedNode;
 public class LinkedList<E extends Comparable<E>> extends LinkedStruct<E,LinkedNode<E>> {
 
     /**
-     * Insere um novo elemento não nulo na coleção, as inserções são sempre feitas no final.
+     * Inserir um novo elemento não nulo na coleção, as inserções são sempre feitas no final.
      * @param obj O objeto a ser incluido na coleção
      */
     @Override

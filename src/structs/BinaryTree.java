@@ -1,92 +1,62 @@
 package structs;
 
-import _abstract.Tree;
-import _enum.Node_Identifier;
+import exception.ElementNotFoundException;
 import exception.EmptyCollectionException;
 import exception.EqualsElementException;
 import exception.NullObjectException;
-import nodes.TreeNode;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import nodes.BinaryNode;
 
 /**
  * Created by Felipe on 01/06/2016.
  */
-public class BinaryTree<E extends Comparable<E>> extends Tree<E>{
+public class BinaryTree<E extends Comparable<E>> {
+    private BinaryNode<E> root;
+    private int currentSize;
+
 
     public BinaryTree(){
-        allowEqualsElements = true;
+        root = new BinaryNode<>();
     }
 
-    public BinaryTree(boolean allowEqualsElements){
-        this.allowEqualsElements = allowEqualsElements;
-    }
-
-    @Override
+    /**
+     * De acordo com a coleção procura o lugar ideal para ser inserido o novo objeto. Ao final do processo
+     * o tamanaho atual da coleção é incrementado.
+     * @param obj Novo item que será incluso na coleção, se for null irá lançar uma exceção.
+     */
     public void insert(E obj) {
         if(obj == null){
             throw new NullObjectException();
         }else{
             if(isEmpty()) {
-                TreeNode<E> node = new TreeNode<E>(Node_Identifier.SOURCE, obj);
-                node.setFather(root);
-                root.putChild(node);
+                BinaryNode<E> node = new BinaryNode<E>(obj);
+                root.setRight(node);
                 currentSize++;
             }else{
-                TreeNode<E> searchNode = root.children().getFirst();
-                while(searchNode != null){
-                    //Se o objeto a ser inserido for maior que o do nó atual é preciso avançar pra direita.
-                    if(searchNode.getObject().compareTo(obj) < 0){
-                        // Se ainda existe um nó a direita é preciso avançar para ele, caso contrário, está no local
-                        //      exato para inserção do novo elemento.
-                        if(hasRightNode(searchNode)){
-                            searchNode = getRightNode(searchNode);
-                        }
-                        else{
-                            TreeNode<E> node = new TreeNode<>(Node_Identifier.RIGHT, obj);
-                            node.setFather(searchNode);
-                            searchNode.putChild(node);
-                            currentSize++;
-                            return;
-                        }
-                    }
-                    else
-                    //Se o objeto a ser inserido é menor que o nó atual é preciso avançar pra esquerda.
-                    if(searchNode.getObject().compareTo(obj) > 0){
-                        //Se ainda existe um nó a esquerda é preciso navegar para ele, se não existir nenhum nó a esquerda
-                        //  significa que está no local exato para pôr o novo elemento.
-                        if(hasLeftNode(searchNode)){
-                            searchNode = getLeftNode(searchNode);
-                        }
-                        else{
-                            TreeNode<E> node = new TreeNode<E>(Node_Identifier.LEFT, obj);
-                            node.setFather(searchNode);
-                            searchNode.putChild(node);
-                            currentSize++;
-                            return;
-                        }
-                    /*
-                        Quando algum objeto é igual ele é colocado ao lado do seu correspondente, como se aquele nó
-                        agora possuisse uma lista encadeada de elementos iguais.
-                     */
-                    }
-                    else{
-                        //Antes de inserir verifica se é permitido objetos com o mesmo ID.
-                        if(allowEqualsElements) {
-                            TreeNode<E> node = new TreeNode<E>(searchNode.getIdentifier(), obj);
-                            node.setFather(searchNode.getFather());
-                            searchNode.getFather().putChild(node);
-                            currentSize++;
-                            return;
-                        }else{
-                            throw new EqualsElementException();
-                        }
-                    }
+                BinaryNode<E> searchNode = findNode(obj);
+                BinaryNode<E> newNode = new BinaryNode<>(obj);
+                newNode.setFather(searchNode);
+
+                if(searchNode.getObject().compareTo(obj) < 0){
+                    searchNode.setRight(newNode);
                 }
+                else
+                if(searchNode.getObject().compareTo(obj) > 0){
+                    searchNode.setLeft(newNode);
+
+                }else{
+                    //Não permitido objetos com o mesmo ID.
+                    throw new EqualsElementException();
+                }
+                currentSize++;
             }
         }
     }
 
-    @Override
+    /** Tenta encontrar na coleção o objeto para ser removido, se for encontrado o remove, se a coleção estiver vazia
+     * irá lançar uma exceção, da mesma forma se o objeto não existir na coleção será lançada uma exceção.
+     * @param obj Utiliza sua key para encontrar o objeto na coleção, se for null é lançada uma exceção.
+     * @return Se for encontrado o objeto com a key é retornado, se não for encontrado irá lançar uma exceção.
+     */
     public E remove(E obj) {
         if(obj == null){
             throw new NullObjectException();
@@ -96,54 +66,244 @@ public class BinaryTree<E extends Comparable<E>> extends Tree<E>{
             throw new EmptyCollectionException();
         }
         else{
-            TreeNode<E> searchNode = root.children().getFirst();
 
-            //Tratar remoção na raiz;
-            //Tratar remoçao de nó com nenhum filho.
-            //Tratar remoção de nó com 1 filho na esquerda.
-            //Tratar remoção de um nó com 1 filho na direita.
-            //Tratar remoção de nó com 2 filhos, NÃO É NECESSÁRIO.
-            //Adicional em todos os casos de já existir um elemento com a mesma key.
+            //Tratar remoção com só um elemento.
+            if(getCurrentSize() == 1){
+                BinaryNode<E> searchNode = root.getRight();
+                root.setRight(null);
+                currentSize--;
+                return searchNode.getObject();
+            }else{
+                BinaryNode<E> removeNode = findNode(obj);
+
+                //Se não existir um objeto com a mesma key.
+                if(removeNode.getObject().compareTo(obj) != 0){
+                    throw new ElementNotFoundException();
+                }
+
+                //Tratar remoçao de nó com nenhum filho.
+                if(!removeNode.hasRight() && !removeNode.hasLeft()){
+                    BinaryNode<E> father = removeNode.getFather();
+
+                    if(father.hasLeft() && father.getLeft().getObject().compareTo(obj) == 0){
+                        father.setLeft(null);
+                    }else{
+                        father.setRight(null);
+                    }
+                    removeNode.setFather(null);
+                    currentSize--;
+                    return removeNode.getObject();
+                }
+                //Tratar remoção de um nó com 1 filho na direita.
+                //Trata também o caso de 2 filhos.
+                else
+                if((removeNode.hasRight() && !removeNode.hasLeft()) || (removeNode.hasRight() && removeNode.hasLeft()) ){
+                    BinaryNode<E> rightNode = removeNode.getRight();
+                    E temp;
+                    if(rightNode.hasLeft()){
+                        /*
+                        CASO REMOÇÃO 01 A DIREITA: Quando ao navegar a direita, fazer um loop até encontrar o nó mais
+                        a esquerda, ao encontrar o nó ele possui filhos.
+                               Representação da árvore binária:
+                                          10 A ser removido
+                                         /  \
+                                        /    \
+                                       5      20 nó a ser navegado.
+                                      / \     /
+                                     2   8   15 a ser deslinkado da árvore.
+                                               \
+                                                16 nó a ser ajustado
+
+                           Passo 1 - Removendo o 10,
+                           Passo 2 - Avançar para o seu filho a direita.
+                           Passo 3 - Desvincular o nó 15.
+                           Passo 4 - Fazer com que 16 seja o novo fiho de 20, e por fim colocar o conteúdo do nó no
+                                objeto a ser removido.
+                        */
+
+                        /*
+                        CASO REMOÇÃO 02 A DIREITA: Quando ao navegar a direita, fazer um loop até encontrar o nó mais
+                        à esquerda, ao encontrar o nó ele não possui filhos.
+                               Representação da árvore binária:
+                                          10 A ser removido
+                                         /  \
+                                        /    \
+                                       5      20 nó a ser navegado.
+                                      / \     /
+                                     2   8   15 a ser deslinkado da árvore.
+
+                           Passo 1 - Removendo o 10,
+                           Passo 2 - Avançar para o seu filho a direita.
+                           Passo 3 - Desvincular o nó 15.
+                           Passo 4 - Colocar o seu conteúdo no objeto 10.
+                        */
+                        BinaryNode<E> successor = rightNode;
+                        while(successor.hasLeft())
+                            successor = successor.getLeft();
+
+                        if(successor.hasRight()){
+                            successor.getRight().setFather(successor.getFather());
+                        }
+                        successor.getFather().setLeft(successor.getRight());
+                        successor.setFather(null);
+                        successor.setRight(null);
+                        temp = removeNode.getObject();
+                        removeNode.setObject(successor.getObject());
+                    }else{
+                        /*
+                        CASO REMOÇÃO 03 A DIREITA: Quando ao navegar a direita, fazer um loop até encontrar o nó mais
+                        à esquerda, ao encontrar o nó ele não possui filhos.
+                               Representação da árvore binária:
+                                          10 A ser removido
+                                         /  \
+                                        /    \
+                                       5      20 conteúdo desse nó irá para o 10.
+                                      / \      \
+                                     2   8      25 seu nó pai será ajustado.
+                                                 \
+                                                  30
+
+                           Passo 1 - Avançar para o seu filho a direita.
+                           Passo 2 - Obter o nó pai do nó a ser remivido, se for o root o seu pai será "NULL".
+                           Passo 3 - Descubra se o nó a ser removido veio do pai pela esquerda ou direita, feito isso
+                                     ajuste o ponteiro.
+                           OBS: se o nó a ser removido for o root é preciso fazer um ajuste no ponteiro do root.
+                        */
+                        BinaryNode<E> father = removeNode.getFather();
+                        if(father != null ) {
+                            if (father.hasLeft() && father.getLeft().getObject().compareTo(obj) == 0) {
+                                father.setLeft(rightNode);
+                            } else {
+                                father.setRight(rightNode);
+                            }
+                        }
+                        rightNode.setFather(father);
+                        //Quando entrar no caso de remover um nó com 2 filhos, como foi escolhido pra remover a direita,
+                        //Ao encontrar o sucessor é preciso fazer herde os filhos da esquerda.
+                        rightNode.setLeft(removeNode.getLeft());
+                        temp = removeNode.getObject();
+
+                        if(root.getRight().equals(removeNode))
+                            root.setRight(rightNode);
+
+                        removeNode.setFather(null);
+                        removeNode.setRight(null);
+                    }
+                    currentSize--;
+                    return temp;
+                }
+                //Tratar remoção de nó com 1 filho na esquerda.
+                //Os casos de uso são os mesmos dos citados acima, a única diferença é que é feito para um filho na esquerda.
+                else
+                if(!removeNode.hasRight() && removeNode.hasLeft()) {
+                    BinaryNode<E> leftNode = removeNode.getLeft();
+                    E temp;
+                    if(leftNode.hasRight()){
+                        BinaryNode<E> successor = leftNode;
+                        while(successor.hasRight())
+                            successor = successor.getRight();
+
+                        //Ao tentar remover o sucessor é preciso verificar se existe algum nó seu a esquerda
+                        //Caso exista, os ponteiros são devidamentes ajustados.
+                        if(successor.hasLeft()){
+                            successor.getLeft().setFather(successor.getFather());
+                        }
+                        successor.getFather().setRight(successor.getLeft());
+                        successor.setFather(null);
+                        successor.setLeft(null);
+      
+                        temp = removeNode.getObject();
+                        removeNode.setObject(successor.getObject());
+
+                    }else{
+                        BinaryNode<E> father = removeNode.getFather();
+                        if(father != null ) {
+                            if (father.hasRight() && father.getRight().getObject().compareTo(obj) == 0) {
+                                father.setRight(leftNode);
+                            } else {
+                                father.setLeft(leftNode);
+                            }
+                        }
+                        leftNode.setFather(father);
+                        if(root.getRight().equals(removeNode))
+                            root.setRight(leftNode);
+                        removeNode.setFather(null);
+                        removeNode.setLeft(null);
+                        temp = removeNode.getObject();
+                    }
+                    currentSize--;
+                    return temp;
+                }
+           }
         }
         return null;
     }
 
-    @Override
+    /**
+     * Procura na coleção um determinado objeto na coleção, se Tentar recuperar o objeto de uma coleção vazia
+     * ocorrerá uma exeção.
+     * @param obj Utiliza sua key como parâmetro de comparação, se for null irá lançar uma exceção.
+     * @return Se encontrar o objeto o retorna, caso contrário, lança uma exceção.
+     */
     public E retrieve(E obj) {
-        return null;
-    }
-
-
-    private boolean hasEqualsNode(TreeNode<E> node){
-        return node.retrieveSpecificChildren(node.getIdentifier()).getCurrentSize() > 0;
-    }
-
-    private boolean hasRightNode( TreeNode<E> node){
-        return node.retrieveSpecificChildren(Node_Identifier.RIGHT).getCurrentSize() > 0;
-    }
-
-    private boolean hasLeftNode( TreeNode<E> node){
-        return node.retrieveSpecificChildren(Node_Identifier.LEFT).getCurrentSize() > 0;
-    }
-
-    private TreeNode<E> getRightNode( TreeNode<E> node){
-        return  hasRightNode(node) ? node.retrieveSpecificChildren(Node_Identifier.RIGHT).getFirst() : null;
-    }
-
-    private TreeNode<E> getLeftNode( TreeNode<E> node){
-        return hasLeftNode(node) ? node.retrieveSpecificChildren(Node_Identifier.LEFT).getFirst() : null;
-    }
-
-    private TreeNode<E> getEqualsNode( TreeNode<E> node){
-        return hasEqualsNode(node) ? node.retrieveSpecificChildren(node.getIdentifier()).getFirst() : null;
-    }
-
-    private void replaceEqualsNode(TreeNode node){
-        LinkedList<TreeNode<E>> list = node.retrieveSpecificChildren(node.getIdentifier());
-        if(list.getCurrentSize() > 2){
-
+        if (obj == null) {
+            throw new NullObjectException();
+        } else if (isEmpty()) {
+            throw new EmptyCollectionException();
+        } else {
+            BinaryNode<E> searchNode = findNode(obj);
+            if(searchNode.getObject().compareTo(obj) == 0){
+                return searchNode.getObject();
+            }else{
+                throw new ElementNotFoundException();
+            }
         }
-
     }
 
+    /**
+     * @param obj Utilizado sua key para encontrar na coleção o objeto desejado.
+     * @return BinaryNode com a posição específica de acordo com a key, se o objeto informado como parâmetro
+     * ainda não existir retorna a posição anterior a ele onde ele deveria ficar.
+     */
+    private BinaryNode<E> findNode(E obj){
+        BinaryNode<E> searchNode = root.getRight();
+
+        while(true){
+            if(searchNode.getObject().compareTo(obj) < 0){
+                if(searchNode.hasRight()) {
+                    searchNode = searchNode.getRight();
+                }else{
+                    return searchNode;
+                }
+            }
+            else
+            if(searchNode.getObject().compareTo(obj) > 0){
+                if(searchNode.hasLeft()) {
+                    searchNode = searchNode.getLeft();
+                }else{
+                    return searchNode;
+                }
+            }
+            else
+            if(searchNode.getObject().compareTo(obj) == 0){
+                return searchNode;
+            }
+        }
+    }
+
+
+    /**
+     * @return True se a lista estiver vazia, false se não estiver.
+     */
+    public boolean isEmpty(){
+        return currentSize == 0;
+    }
+
+
+    /**
+     * @return Um inteiro representando o atual tamanho da coleção.
+     */
+    public int getCurrentSize(){
+        return currentSize;
+    }
 }

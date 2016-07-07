@@ -16,7 +16,7 @@ public class FileLoader {
 
 	private FileReader fr;
 	private BufferedReader br;
-	private final int MAX = 1000;
+	private final int MAX = 100000;
 	private long dataFile[] = new long[MAX];
 	
 	public void loader(String filename){
@@ -32,7 +32,7 @@ public class FileLoader {
 				String linha;
 				int count = 0;
 				
-				while( br.ready()){
+				while( count < MAX){
 					linha = br.readLine();
 					dataFile[count] = Long.parseLong(linha);
 					count++;

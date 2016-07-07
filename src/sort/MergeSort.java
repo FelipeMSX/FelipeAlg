@@ -6,9 +6,10 @@ package sort;
 		- Aceita valores iguais.
         - Ordem Crescente.
 */
+@SuppressWarnings("unchecked")
 public class MergeSort<E extends Comparable<E>> {
 
-	E tempVector[];
+	private E tempVector[];
 
 	//Prepara a função antes de ser chamada
 	public void sort(E input[])

@@ -18,7 +18,7 @@ public class BinaryTreeTest {
 
     @Before
     public void initialize() throws Exception {
-        biTree = new BinaryTree();
+        biTree = new BinaryTree<>();
         ObjectTest o1 = new ObjectTest(10, "Nó Raiz");
         ObjectTest o2 = new ObjectTest(5, "Esquerdo da raiz.");
         ObjectTest o3 = new ObjectTest(20, "Direito da raiz");

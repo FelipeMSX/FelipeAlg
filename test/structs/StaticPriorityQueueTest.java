@@ -5,7 +5,6 @@ import exception.NullObjectException;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -17,11 +16,11 @@ public class StaticPriorityQueueTest {
     private StaticPriorityQueue<Integer> queue;
     @Before
     public void initialize() throws Exception {
-        queueLimited = new StaticPriorityQueue(3,false);
+        queueLimited = new StaticPriorityQueue<>(3,false);
         queueLimited.push(3);
         queueLimited.push(6);
         queueLimited.push(9);
-        queue = new StaticPriorityQueue(2);
+        queue = new StaticPriorityQueue<>(2);
         queue.push(1);
         queue.push(2);
     }

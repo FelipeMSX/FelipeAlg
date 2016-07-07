@@ -54,10 +54,10 @@ public class QuickSort<E extends Comparable<E>> {
 	}
 
 
-	private void swap(E[] input ,int positionX, int positionY){
-		E temp = input[positionX];
-		input[positionX] = input[positionY];
-		input[positionY] = temp;
+	private void swap(E[] input ,int X, int Y){
+		E temp = input[X];
+		input[X] = input[Y];
+		input[Y] = temp;
 	}
 
 	private int definePivot(int init, int end){

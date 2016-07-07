@@ -13,7 +13,7 @@ import java.util.Iterator;
  * Classe abstrata usada para construção das estruturas linkadas. Possui um iterator por padrão.
  */
 
-
+@SuppressWarnings("unchecked")
 public abstract class LinkedStruct <E extends  Comparable<E>,T extends LinkedNode<E>> implements Common<E>,Iterable<E> {
 
     /**

@@ -10,7 +10,7 @@ import exception.FullCollectionException;
  * 	quando esse valor atingir o limite é incrementado de acordo com o resizeValue. Por padrão, a estrutura irar crescer
  * 	dinamicamente, mas, o usuário pode limitar isso.
  */
-
+@SuppressWarnings("unchecked")
 public abstract class StaticStruct<E extends Comparable<E>> implements Common<E> {
 
 	/**

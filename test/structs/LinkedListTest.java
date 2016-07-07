@@ -5,7 +5,6 @@ import exception.EmptyCollectionException;
 import exception.NullObjectException;
 import org.junit.Before;
 import org.junit.Test;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import static org.junit.Assert.*;
 
@@ -18,7 +17,7 @@ public class LinkedListTest {
 
     @Before
     public void initialize() throws Exception {
-        list = new LinkedList();
+        list = new LinkedList<>();
         list.insert(3);
         list.insert(6);
         list.insert(9);

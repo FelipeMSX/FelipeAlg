@@ -28,7 +28,7 @@ public class BinaryTree<E extends Comparable<E>> {
             throw new NullObjectException();
         }else{
             if(isEmpty()) {
-                BinaryNode<E> node = new BinaryNode<E>(obj);
+                BinaryNode<E> node = new BinaryNode<>(obj);
                 root.setRight(node);
                 currentSize++;
             }else{

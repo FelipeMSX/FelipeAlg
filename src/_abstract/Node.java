@@ -7,11 +7,11 @@ package _abstract;
 public abstract class Node<E> {
 	private E object;
 	
-	public Node(){
+	protected Node(){
 		this.object = null;	
 	}
-	
-	public Node(E object){
+
+	protected Node(E object){
 		this.object = object;
 	}
 	

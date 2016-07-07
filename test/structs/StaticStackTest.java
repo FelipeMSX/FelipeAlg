@@ -19,11 +19,11 @@ public class StaticStackTest {
 
     @Before
     public void initialize() throws Exception {
-        stackLimited = new StaticStack(3,false);
+        stackLimited = new StaticStack<>(3,false);
         stackLimited.push(3);
         stackLimited.push(6);
         stackLimited.push(9);
-        stack = new StaticStack(3);
+        stack = new StaticStack<>(3);
         stack.push(3);
         stack.push(6);
         stack.push(9);

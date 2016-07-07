@@ -20,18 +20,18 @@ public class StaticQueueTest {
 
     @Before
     public void initialize() throws Exception {
-        queueLimited = new StaticQueue(3,false);
+        queueLimited = new StaticQueue<>(3,false);
         queueLimited.push(3);
         queueLimited.push(6);
         queueLimited.push(9);
-        queue = new StaticQueue(2);
+        queue = new StaticQueue<>(2);
         queue.push(1);
         queue.push(2);
     }
 
     @Test(expected = FullCollectionException.class)
     public void testPushFullCollection() throws Exception {
-        queueLimited.push(new Integer(2));
+        queueLimited.push(2);
     }
 
     @Test(expected = NullObjectException.class)
@@ -65,14 +65,14 @@ public class StaticQueueTest {
     public void testGetFirst() throws  Exception{
         assertEquals(new Integer(3),queueLimited.getFirst());
         queueLimited.pop();
-        queueLimited.push(new Integer(12));
+        queueLimited.push(12);
         assertEquals(new Integer(6),queueLimited.getFirst());
     }
 
     @Test
     public void testGetLast() throws  Exception{
         assertEquals(new Integer(2),queue.getLast());
-        queue.push(new Integer(20));
+        queue.push(20);
         assertEquals(new Integer(20),queue.getLast());
     }
 }

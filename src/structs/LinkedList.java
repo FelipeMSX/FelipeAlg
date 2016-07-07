@@ -22,7 +22,8 @@ public class LinkedList<E extends Comparable<E>> extends LinkedStruct<E,LinkedNo
         if(obj == null)
             throw new NullObjectException();
 
-        LinkedNode<E> node = new LinkedNode(obj);
+        LinkedNode<E> node;
+        node = new LinkedNode<>(obj);
         if(isEmpty()){
             head.setNext(node);
         }else{

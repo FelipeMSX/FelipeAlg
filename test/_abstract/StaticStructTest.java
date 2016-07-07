@@ -5,9 +5,7 @@ import exception.EmptyCollectionException;
 import exception.FullCollectionException;
 import org.junit.Before;
 import org.junit.Test;
-import structs.LinkedList;
 import structs.StaticQueue;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -20,7 +18,7 @@ public class StaticStructTest {
     private StaticQueue<Integer> queue;
     @Before
     public void initialize() throws Exception {
-        queue = new StaticQueue();
+        queue = new StaticQueue<>();
         queue.push(3);
         queue.push(6);
         queue.push(9);
@@ -28,7 +26,7 @@ public class StaticStructTest {
 
     @Test
     public void testIsEmpty() throws Exception {
-        StaticQueue<Integer> queue = new StaticQueue(10);
+        StaticQueue<Integer> queue = new StaticQueue<>(10);
         assertTrue("A coleção deveria estar vazia!",queue.isEmpty());
     }
 
@@ -87,7 +85,7 @@ public class StaticStructTest {
 
     @Test
     public void testIsFull() throws Exception {
-        StaticQueue<Integer> queue = new StaticQueue(2);
+        StaticQueue<Integer> queue = new StaticQueue<>(2);
         queue.push(1);
         queue.push(2);
         assertTrue("Deveria estar cheia a coleção!",queue.isFull());
@@ -105,7 +103,7 @@ public class StaticStructTest {
     @Test(expected = FullCollectionException.class)
     public void testDoubleCapacityNotResizable() throws Exception {
         //Testando para uma coleção não dinamicamente crescente.
-        StaticQueue<Integer> queue = new StaticQueue(2,false);
+        StaticQueue<Integer> queue = new StaticQueue<>(2,false);
         queue.setAutoRezise(10);
         queue.push(1);
         queue.push(2);

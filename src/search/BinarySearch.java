@@ -3,10 +3,17 @@ package search;
 
 public class BinarySearch<E extends Comparable<E>> {
 
+
+	/**
+	 * @param array Array original onde será feita a busca do item.
+	 * @param item Item contendo a(s) chave(s) para localização.
+	 * @return Objeto completo caso seja encontraso, caso contrário returna null.
+	 *
+	 */
 	public E binarySearch(E[] array, E item){
 		int left = 0;
 		int right = array.length -1;
-		int mid = 0;
+		int mid;
 
 		while( left <= right){
 			mid = midValue(left, right);

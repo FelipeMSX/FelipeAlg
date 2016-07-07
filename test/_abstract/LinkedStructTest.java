@@ -5,8 +5,6 @@ import exception.EmptyCollectionException;
 import org.junit.Before;
 import org.junit.Test;
 import structs.LinkedList;
-import structs.StaticPriorityQueue;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -19,7 +17,7 @@ public class LinkedStructTest {
     private LinkedList<Integer> list;
     @Before
     public void initialize() throws Exception {
-        list = new LinkedList();
+        list = new LinkedList<>();
         list.insert(3);
         list.insert(6);
         list.insert(9);

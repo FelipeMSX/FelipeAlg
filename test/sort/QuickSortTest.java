@@ -13,7 +13,7 @@ public class QuickSortTest {
     public void testSort() throws Exception {
         //Teste para ordenzação de string
         {
-            QuickSort<String> quick = new QuickSort<>();
+            QuickSort<String> quick = new QuickSort<>(String::compareTo);
             String[] arrayString = {"B", "D", "R", "A", "Z", "N", "I", "C"};
             String[] arrayExpected = {"A", "B", "C", "D", "I", "N", "R", "Z"};
             quick.sort(arrayString);
@@ -24,7 +24,7 @@ public class QuickSortTest {
         {
             Integer[] arrayInteger = {8, 1, 10, -19, 7, 1567, 102};
             Integer[] arrayExpected = {-19, 1, 7, 8, 10, 102, 1567};
-            QuickSort<Integer> quick = new QuickSort<>();
+            QuickSort<Integer> quick = new QuickSort<>(Integer::compareTo);
             quick.sort(arrayInteger);
             assertArrayEquals(arrayExpected, arrayInteger);
         }
@@ -33,7 +33,7 @@ public class QuickSortTest {
         {
             Integer[] arrayInteger  = {8, 1, 10, -19, 7, 1567, 102, 8,1};
             Integer[] arrayExpected = {-19, 1,1, 7, 8, 8, 10, 102, 1567};
-            QuickSort<Integer> quick = new QuickSort<>();
+            QuickSort<Integer> quick = new QuickSort<>(Integer::compareTo);
             quick.sort(arrayInteger);
             assertArrayEquals(arrayExpected, arrayInteger);
         }

@@ -1,14 +1,23 @@
 package sort;
 
 
+import exception.NullObjectException;
+
+import java.util.Comparator;
 
 /**
  * Created by Felipe on 11/11/2015.
  */
 
 
-public class HeapSort<E extends Comparable<E>> {
+public class HeapSort<E> {
+    private final Comparator<E> comparator;
 
+    HeapSort(Comparator<E> comparator){
+        this.comparator = comparator;
+        if(comparator == null)
+            throw new NullObjectException();
+    }
 
     public void sort(E input[]){
         heapsort(input,input.length);
@@ -28,10 +37,10 @@ public class HeapSort<E extends Comparable<E>> {
         int E = getLeft(i);
         int D = getRight(i);
 
-        if (E < n && input[E].compareTo(input[P]) >= 0 )
+        if (E < n && comparator.compare(input[E],input[P]) >= 0 )
             P = E;
 
-        if (D < n && input[D].compareTo(input[P]) >= 0 )
+        if (D < n &&  comparator.compare(input[D],input[P]) >= 0 )
             P = D;
 
         if (P != i) {

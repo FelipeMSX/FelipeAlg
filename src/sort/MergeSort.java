@@ -1,16 +1,25 @@
 package sort;
 
 
+import exception.NullObjectException;
+
+import java.util.Comparator;
+
 /*
 	Descrição:
 		- Aceita valores iguais.
         - Ordem Crescente.
 */
 @SuppressWarnings("unchecked")
-public class MergeSort<E extends Comparable<E>> {
-
+public class MergeSort<E> {
+	private final Comparator<E> comparator;
 	private E tempVector[];
 
+	MergeSort(Comparator<E> comparator){
+		this.comparator = comparator;
+		if(comparator == null)
+			throw new NullObjectException();
+	}
 	//Prepara a função antes de ser chamada
 	public void sort(E input[])
 	{
@@ -45,10 +54,12 @@ public class MergeSort<E extends Comparable<E>> {
 				// Se i > meio, significa que não existe mais elementos do inicio ao fim para comparar, agora é só adicioar do meio +1 ao fim.
 			else if(i > middle)
 				tempVector[k++] = input[j++];
-			else if(input[i].compareTo(input[j]) <= 0)
+			else if(comparator.compare(input[i],input[j]) <= 0)
 				tempVector[k++] = input[i++];
 			else
 				tempVector[k++] = input[j++];
+
+
 		}
 		//Copiar os elementos para o vetor entrada
 		for(int w = init ; w <= end; w++)

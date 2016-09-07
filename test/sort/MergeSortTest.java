@@ -2,6 +2,8 @@ package sort;
 
 import org.junit.Test;
 
+import java.util.Comparator;
+
 import static org.junit.Assert.assertArrayEquals;
 
 /**
@@ -13,7 +15,7 @@ public class MergeSortTest {
     public void testSort() throws Exception {
         //Teste para ordenzação de string
         {
-            MergeSort<String> merge = new MergeSort<>();
+            MergeSort<String> merge = new MergeSort<>(String::compareTo);
             String[] arrayString = {"B", "D", "R", "A", "Z", "N", "I", "C"};
             String[] arrayExpected = {"A", "B", "C", "D", "I", "N", "R", "Z"};
             merge.sort(arrayString);
@@ -22,7 +24,7 @@ public class MergeSortTest {
 
         //Ordenação de inteiros.
         {
-            MergeSort<Integer> merge = new MergeSort<>();
+            MergeSort<Integer> merge = new MergeSort<>(Integer::compareTo);
             Integer[] arrayInteger = {8, 1, 10, -19, 7, 1567, 102};
             Integer[] arrayExpected = {-19, 1, 7, 8, 10, 102, 1567};
             merge.sort(arrayInteger);
@@ -31,7 +33,7 @@ public class MergeSortTest {
 
         //Ordenação de inteiros com alguns valores iguais.
         {
-            MergeSort<Integer> merge = new MergeSort<>();
+            MergeSort<Integer> merge = new MergeSort<>(Integer::compareTo);
             Integer[] arrayInteger  = {8, 1, 10, -19, 7, 1567, 102, 8,1};
             Integer[] arrayExpected = {-19, 1,1, 7, 8, 8, 10, 102, 1567};
 

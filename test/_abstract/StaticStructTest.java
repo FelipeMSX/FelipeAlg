@@ -1,8 +1,6 @@
 package _abstract;
 
-import exception.ElementNotFoundException;
-import exception.EmptyCollectionException;
-import exception.FullCollectionException;
+import exception.*;
 import org.junit.Before;
 import org.junit.Test;
 import structs.StaticQueue;
@@ -66,7 +64,7 @@ public class StaticStructTest {
         assertEquals("Tamanho esperado é 4!",(Integer)4,queue.getFirst());
     }
 
-    @Test
+    @Test(expected = ComparerNotSetException.class)
     public void testRetrieve() throws Exception {
         assertEquals("Item esperado  é 3!",(Integer)3,queue.retrieve(3));
     }
@@ -77,7 +75,7 @@ public class StaticStructTest {
         queue.retrieve(4);
     }
 
-    @Test(expected = ElementNotFoundException.class)
+    @Test(expected = ComparerNotSetException.class)
     public void testRetrieveElementNotFound() throws  Exception{
         //Procura por um elemento que não existe na coleção.
         queue.retrieve(8);

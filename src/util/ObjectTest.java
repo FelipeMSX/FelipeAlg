@@ -1,6 +1,6 @@
 package util;
 
-public class ObjectTest {
+public class ObjectTest implements Comparable<ObjectTest> {
 	private int iD;
 	private String name;
 	
@@ -15,7 +15,7 @@ public class ObjectTest {
 	}
 
 
-
+	@Override
 	public int compareTo(ObjectTest arg0) {
 		if(this.iD > arg0.getiD())
 			return 1;

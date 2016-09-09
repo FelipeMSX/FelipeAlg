@@ -1,9 +1,9 @@
 package _abstract;
 
 import _interfaces.Common;
-import exception.ElementNotFoundException;
-import exception.EmptyCollectionException;
-import exception.FullCollectionException;
+import exception.*;
+
+import java.util.Comparator;
 
 /**
  * 	- Estrutura usada para criação das estrutura de dados com base em um vetor.Possui um valor padrão inicial de 100,
@@ -11,7 +11,9 @@ import exception.FullCollectionException;
  * 	dinamicamente, mas, o usuário pode limitar isso.
  */
 @SuppressWarnings("unchecked")
-public abstract class StaticStruct<E extends Comparable<E>> implements Common<E> {
+public abstract class StaticStruct<E> implements Common<E> {
+
+	private Comparator<E> comparator;
 
 	/**
 	 * Vetor onde serão armazenados os objetos genéricos.
@@ -65,6 +67,32 @@ public abstract class StaticStruct<E extends Comparable<E>> implements Common<E>
 	{
 		this.maxSize 		= maxSize;
 		this.isResizable 	= isResizable;
+		resizeValue	 		= 100;
+		vector 				= (E[]) new Comparable[maxSize];
+
+	}
+
+	/**
+	 * @param maxSize Tamanho máximo que a coleção pode atingir.
+	 */
+	public StaticStruct(int maxSize, Comparator<E> comparator)
+	{
+		this.maxSize 		= maxSize;
+		this.comparator 	= comparator;
+		resizeValue 		= 100;
+		vector 				= (E[]) new Comparable[maxSize];
+		isResizable 		= true;
+	}
+
+	/**
+	 * @param maxSize Tamanho máximo que a coleção pode atingir.
+	 * @param isResizable Indica se a coleção pode crescer dinamicamente.
+	 */
+	public StaticStruct(int maxSize, boolean isResizable, Comparator<E> comparator)
+	{
+		this.maxSize 		= maxSize;
+		this.isResizable 	= isResizable;
+		this.comparator		= comparator;
 		resizeValue	 		= 100;
 		vector 				= (E[]) new Comparable[maxSize];
 
@@ -128,8 +156,10 @@ public abstract class StaticStruct<E extends Comparable<E>> implements Common<E>
 		if(isEmpty()){
 			throw new EmptyCollectionException();
 		}else{
+			if(comparator == null)
+				throw new ComparerNotSetException();
 			for(int i =0; i < currentSize ;i++)
-				if(vector[i].compareTo(obj) == 0)
+				if(comparator.compare(vector[i],obj) == 0)
 					return vector[i];
 
 			throw new ElementNotFoundException();
@@ -181,5 +211,19 @@ public abstract class StaticStruct<E extends Comparable<E>> implements Common<E>
 
 	public void setResizable(boolean resizable) {
 		isResizable = resizable;
+	}
+
+	public int compareTo(E o1, E o2) {
+		if (comparator == null)
+			throw new ComparerNotSetException();
+		return comparator.compare(o1, o2);
+	}
+
+	public Comparator<E> getComparator() {
+		return comparator;
+	}
+
+	public void setComparator(Comparator<E> comparator) {
+		this.comparator = comparator;
 	}
 }

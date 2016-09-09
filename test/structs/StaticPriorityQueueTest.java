@@ -16,11 +16,11 @@ public class StaticPriorityQueueTest {
     private StaticPriorityQueue<Integer> queue;
     @Before
     public void initialize() throws Exception {
-        queueLimited = new StaticPriorityQueue<>(3,false);
+        queueLimited = new StaticPriorityQueue<>(3,false,Integer::compareTo);
         queueLimited.push(3);
         queueLimited.push(6);
         queueLimited.push(9);
-        queue = new StaticPriorityQueue<>(2);
+        queue = new StaticPriorityQueue<>(2,Integer::compareTo);
         queue.push(1);
         queue.push(2);
     }

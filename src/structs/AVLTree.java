@@ -1,14 +1,25 @@
 package structs;
 
+import exception.NullObjectException;
 import nodes.BinaryNode;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
+import java.util.Comparator;
 
 /**
  * Created by Felipe on 02/06/2016.
  */
-public class AVLTree <E extends Comparable<E>> {
+public class AVLTree <E> {
     private BinaryNode<E> root;
     private int currentSize;
+    private Comparator<E> comparator;
+
+    AVLTree(Comparator<E> comparator){
+        this.comparator = comparator;
+        if(comparator == null)
+            throw new NullObjectException();
+        root = new BinaryNode<>();
+    }
 
     public void insert(E obj){
         throw new NotImplementedException();
@@ -32,7 +43,7 @@ public class AVLTree <E extends Comparable<E>> {
         BinaryNode<E> searchNode = root.getRight();
 
         while(true){
-            if(searchNode.getObject().compareTo(obj) < 0){
+            if(compareTo(searchNode.getObject(),obj) < 0){
                 if(searchNode.hasRight()) {
                     searchNode = searchNode.getRight();
                 }else{
@@ -40,7 +51,7 @@ public class AVLTree <E extends Comparable<E>> {
                 }
             }
             else
-            if(searchNode.getObject().compareTo(obj) > 0){
+            if(compareTo(searchNode.getObject(),obj) > 0){
                 if(searchNode.hasLeft()) {
                     searchNode = searchNode.getLeft();
                 }else{
@@ -48,12 +59,11 @@ public class AVLTree <E extends Comparable<E>> {
                 }
             }
             else
-            if(searchNode.getObject().compareTo(obj) == 0){
+            if(compareTo(searchNode.getObject(),obj) == 0){
                 return searchNode;
             }
         }
     }
-
     /**
      * @return True se a lista estiver vazia, false se não estiver.
      */
@@ -67,5 +77,9 @@ public class AVLTree <E extends Comparable<E>> {
      */
     public int getCurrentSize(){
         return currentSize;
+    }
+
+    private int compareTo(E o1, E o2) {
+        return comparator.compare(o1, o2);
     }
 }

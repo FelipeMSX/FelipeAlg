@@ -4,11 +4,13 @@ import _abstract.Queue_Stack;
 import exception.EmptyCollectionException;
 import exception.NullObjectException;
 
+import java.util.Comparator;
+
 /**
  * Inserção é na posição mais a esquerda não vazia. A sua remoção é retirada o primeiro elmento do vetor.
  */
 
-public class StaticQueue<E extends Comparable<E>> extends Queue_Stack<E> {
+public class StaticQueue<E> extends Queue_Stack<E> {
 
 
 	/**
@@ -30,6 +32,21 @@ public class StaticQueue<E extends Comparable<E>> extends Queue_Stack<E> {
 	 */
 	public StaticQueue(int maxSize, boolean isResizable) {
 		super(maxSize,isResizable);
+	}
+
+	/**
+	 * @param maxSize Tamanho inicial máximo da fila.
+	 */
+	public StaticQueue(int maxSize, Comparator<E> comparator) {
+		super(maxSize,comparator);
+	}
+
+	/**
+	 * @param maxSize Tamanho inicial máximo da fila.
+	 * @param isResizable TRUE indica que a lista irá crescer dinamicamente.
+	 */
+	public StaticQueue(int maxSize, boolean isResizable, Comparator<E> comparator) {
+		super(maxSize,isResizable,comparator);
 	}
 
 	/**

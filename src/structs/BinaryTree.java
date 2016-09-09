@@ -1,20 +1,22 @@
 package structs;
 
-import exception.ElementNotFoundException;
-import exception.EmptyCollectionException;
-import exception.EqualsElementException;
-import exception.NullObjectException;
+import exception.*;
 import nodes.BinaryNode;
+
+import java.util.Comparator;
 
 /**
  * Created by Felipe on 01/06/2016.
  */
-public class BinaryTree<E extends Comparable<E>> {
+public class BinaryTree<E> {
     private BinaryNode<E> root;
     private int currentSize;
 
-
-    public BinaryTree(){
+    private Comparator<E> comparator;
+    BinaryTree(Comparator<E> comparator){
+        this.comparator = comparator;
+        if(comparator == null)
+            throw new NullObjectException();
         root = new BinaryNode<>();
     }
 
@@ -36,11 +38,11 @@ public class BinaryTree<E extends Comparable<E>> {
                 BinaryNode<E> newNode = new BinaryNode<>(obj);
                 newNode.setFather(searchNode);
 
-                if(searchNode.getObject().compareTo(obj) < 0){
+                if(compareTo(searchNode.getObject(),obj) < 0){
                     searchNode.setRight(newNode);
                 }
                 else
-                if(searchNode.getObject().compareTo(obj) > 0){
+                if(compareTo(searchNode.getObject(),obj) > 0){
                     searchNode.setLeft(newNode);
 
                 }else{
@@ -77,7 +79,7 @@ public class BinaryTree<E extends Comparable<E>> {
                 BinaryNode<E> removeNode = findNode(obj);
 
                 //Se não existir um objeto com a mesma key.
-                if(removeNode.getObject().compareTo(obj) != 0){
+                if(compareTo(removeNode.getObject(),obj) != 0){
                     throw new ElementNotFoundException();
                 }
 
@@ -85,7 +87,7 @@ public class BinaryTree<E extends Comparable<E>> {
                 if(!removeNode.hasRight() && !removeNode.hasLeft()){
                     BinaryNode<E> father = removeNode.getFather();
 
-                    if(father.hasLeft() && father.getLeft().getObject().compareTo(obj) == 0){
+                    if(father.hasLeft() && compareTo(father.getLeft().getObject(),obj) == 0){
                         father.setLeft(null);
                     }else{
                         father.setRight(null);
@@ -171,7 +173,7 @@ public class BinaryTree<E extends Comparable<E>> {
                         */
                         BinaryNode<E> father = removeNode.getFather();
                         if(father != null ) {
-                            if (father.hasLeft() && father.getLeft().getObject().compareTo(obj) == 0) {
+                            if (father.hasLeft() && compareTo(father.getLeft().getObject(),obj) == 0) {
                                 father.setLeft(rightNode);
                             } else {
                                 father.setRight(rightNode);
@@ -218,7 +220,7 @@ public class BinaryTree<E extends Comparable<E>> {
                     }else{
                         BinaryNode<E> father = removeNode.getFather();
                         if(father != null ) {
-                            if (father.hasRight() && father.getRight().getObject().compareTo(obj) == 0) {
+                            if (father.hasRight() && compareTo(father.getRight().getObject(),obj) == 0) {
                                 father.setRight(leftNode);
                             } else {
                                 father.setLeft(leftNode);
@@ -252,7 +254,8 @@ public class BinaryTree<E extends Comparable<E>> {
             throw new EmptyCollectionException();
         } else {
             BinaryNode<E> searchNode = findNode(obj);
-            if(searchNode.getObject().compareTo(obj) == 0){
+
+            if(compareTo(searchNode.getObject(),obj) == 0){
                 return searchNode.getObject();
             }else{
                 throw new ElementNotFoundException();
@@ -269,7 +272,7 @@ public class BinaryTree<E extends Comparable<E>> {
         BinaryNode<E> searchNode = root.getRight();
 
         while(true){
-            if(searchNode.getObject().compareTo(obj) < 0){
+            if(compareTo(searchNode.getObject(),obj) < 0){
                 if(searchNode.hasRight()) {
                     searchNode = searchNode.getRight();
                 }else{
@@ -277,7 +280,7 @@ public class BinaryTree<E extends Comparable<E>> {
                 }
             }
             else
-            if(searchNode.getObject().compareTo(obj) > 0){
+            if(compareTo(searchNode.getObject(),obj) > 0){
                 if(searchNode.hasLeft()) {
                     searchNode = searchNode.getLeft();
                 }else{
@@ -285,7 +288,7 @@ public class BinaryTree<E extends Comparable<E>> {
                 }
             }
             else
-            if(searchNode.getObject().compareTo(obj) == 0){
+            if(compareTo(searchNode.getObject(),obj) == 0){
                 return searchNode;
             }
         }
@@ -305,5 +308,9 @@ public class BinaryTree<E extends Comparable<E>> {
      */
     public int getCurrentSize(){
         return currentSize;
+    }
+
+    private int compareTo(E o1, E o2) {
+        return comparator.compare(o1, o2);
     }
 }

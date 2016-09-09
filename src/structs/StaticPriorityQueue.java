@@ -1,19 +1,23 @@
 package structs;
 
+import _abstract.Queue_Stack;
+import exception.EmptyCollectionException;
 import exception.NullObjectException;
+
+import java.util.Comparator;
 
 /**
  *Remoção é retirado o elemento com maior prioridade. Elemento com a mesma prioridade é colocado antes.
  */
 
-public class StaticPriorityQueue<E extends Comparable<E>> extends StaticQueue<E> {
+public class StaticPriorityQueue<E> extends StaticStack<E> {
 
 
 	/**
 	 * @param maxSize tamanho máximo inicial da coleção.
 	 */
-	public StaticPriorityQueue(int maxSize) {
-		super(maxSize);
+	public StaticPriorityQueue(int maxSize, Comparator<E> comparator) {
+		super(maxSize,comparator);
 	}
 
 	/**
@@ -21,8 +25,8 @@ public class StaticPriorityQueue<E extends Comparable<E>> extends StaticQueue<E>
 	 * @param isResizable TRUE indica se a coleção tem um crescimento autônomo, caso contrário, ao tentar inserir um
      *                    elemento com o tamanho no limite lançará uma exceção.
 	 */
-	public StaticPriorityQueue(int maxSize, boolean isResizable) {
-		super(maxSize,isResizable);
+	public StaticPriorityQueue(int maxSize, boolean isResizable, Comparator<E> comparator) {
+		super(maxSize,isResizable,comparator);
 	}
 
     /**
@@ -45,7 +49,8 @@ public class StaticPriorityQueue<E extends Comparable<E>> extends StaticQueue<E>
 			int position = 0;
 			if(!isEmpty()){
 				//encontra a posição do item a ser colocado.
-				while(obj.compareTo(vector[position]) < 0)
+
+				while(compareTo(obj,vector[position]) < 0)
 					position++;
 
 				//desloca os itens posteriores uma posição a frente para colocar o objeto na posição encontrada.

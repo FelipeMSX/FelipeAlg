@@ -4,11 +4,13 @@ import _abstract.Queue_Stack;
 import exception.EmptyCollectionException;
 import exception.NullObjectException;
 
+import java.util.Comparator;
+
 /**
  * 	Inserção é na posição mais a esquerda não vazia. Remoção é retirada o primeiro elmento do vetor.
  */
 
-public class StaticStack<E extends Comparable<E>> extends Queue_Stack<E> {
+public class StaticStack<E> extends Queue_Stack<E> {
 
 
 	/**
@@ -24,6 +26,22 @@ public class StaticStack<E extends Comparable<E>> extends Queue_Stack<E> {
 	 */
 	public StaticStack(int maxSize, boolean isResizable) {
 		super(maxSize,isResizable);
+	}
+
+
+	/**
+	 * @param maxSize Inicializa a pilha com um valor limite máximo.
+	 */
+	public StaticStack(int maxSize, Comparator<E> comparator) {
+		super(maxSize,comparator);
+	}
+
+	/**
+	 * @param maxSize Inicializa a pilha com um valor limite máximo.
+	 * @param isResizable Propriedade que define se a pilha irá crescer dinamicamente.
+	 */
+	public StaticStack(int maxSize, boolean isResizable,  Comparator<E> comparator) {
+		super(maxSize,isResizable,comparator);
 	}
 
 	/**

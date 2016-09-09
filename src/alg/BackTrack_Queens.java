@@ -15,8 +15,6 @@ public class BackTrack_Queens {
     private final int lines;
     private boolean [][] environment;
 
-    PriorityQueue
-
      BackTrack_Queens(int queens,int columns, int lines){
          this.queens    = queens;
          this.columns   = columns;
@@ -29,12 +27,6 @@ public class BackTrack_Queens {
 
     }
 
-    private class Queens extends Comparable<Queens>{
 
-        @Override
-        public int compareTo(Queens o) {
-            return 0;
-        }
-    }
 }
 
